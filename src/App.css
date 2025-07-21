@@ -1,31 +1,42 @@
-.App {
-  text-align: center;
+
+.logo-superior-izquierda {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 250px; 
+}
+.logo-centro {
+  position: relative;
+  top: auto;
+  width: 400px;
+}
+.btn-logear {
+  width: 400px;
+  background-color: #bdbdbd !important; /* Azul claro */
+  color: white ;
+  border: none;
+}
+.btn-logear:hover {
+  background-color: #0366b0 !important; /* color al pasar el mouse */
+  color: white !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.btn-logear:active {
+  background-color: #012f5a !important; /* color al hacer clic */
+  color: white !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.btn-registrar {
+  width: 400px;
+  background-color: #bdbdbd !important; /* Azul oscuro */
+  border: none;
+}
+.btn-registrar:hover {
+  background-color: #0366b0 !important; /* color al pasar el mouse */
+  color: white !important;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-.heart {
-  color: #ff0000;
-}
-
-.small {
-  font-size: 0.75rem;
+.btn-registrar:active {
+  background-color: #012f5a  !important; /* color al hacer clic */
+  color: white !important;
 }
