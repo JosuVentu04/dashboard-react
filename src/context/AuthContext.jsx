@@ -1,51 +1,74 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user,  setUser]  = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('token'));
   const navigate = useNavigate();
+  const [token, setToken] = useState("");
+  const [user, setUser] = useState(null);
 
-  /* ---------- axios con credenciales ---------- */
-  const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    withCredentials: false            // usa cookies = true, JWT = false
-  });
+  /* 1️⃣ Instancia única de Axios */
+  const api = useMemo(() => {
+    const inst = axios.create({
+      baseURL: import.meta.env.VITE_API_URL,
+      withCredentials: false            // solo header, sin cookies
+    });
+    inst.interceptors.request.use(cfg => {
+      const t = sessionStorage.getItem('token');   // siempre la versión actual
+      if (t) cfg.headers.Authorization = `Bearer ${t}`;
+      return cfg;
+    });
+    return inst;
+  }, []);
 
-  api.interceptors.request.use(cfg => {
-    if (token) cfg.headers.Authorization = `Bearer ${token}`;
-    return cfg;
-  });
-
-  /* ----------------- acciones ----------------- */
+  /* 2️⃣ Login */
   const login = async creds => {
     const { data } = await api.post('/auth/login', creds);
+
+    // guarda el JWT una sola vez
+    sessionStorage.setItem('token', data.access_token);
     setToken(data.access_token);
-    localStorage.setItem('token', data.access_token);
-    setUser(data.user);               // la API puede devolver datos del usuario
-    navigate('/');
+
+    // header inmediato para las llamadas siguientes
+    api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
+
+    // carga el perfil antes de redirigir
+    const me = await api.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    console.log(me);
+    setUser(me.data);
+
+    navigate('/pagina-inicio');                       // o '/landing'
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
-
-  /* ---------- opcional: validar token  ---------- */
+  /* 3️⃣ Hidrata el usuario al refrescar la SPA */
   useEffect(() => {
-    if (!token) return;
-    api.get('/auth/me')
-       .then(r => setUser(r.data))
-       .catch(() => logout());
-  }, [token]);
+    const token = sessionStorage.getItem("token");
+    console.log('Nuevo token:', token);
+    if (token) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+    if (!token) return;                  // sin token, nada que hacer
+    api.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(r => setUser(r.data))
+      .catch(() => {                    // token vencido o inválido
+        sessionStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
+      });
+  }, [token]);                           // api es estable, no hace falta listarla
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, api }}>
+    <AuthContext.Provider value={{ user, token, login, api }}>
       {children}
     </AuthContext.Provider>
   );

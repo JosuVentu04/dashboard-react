@@ -22,18 +22,15 @@ export default function Login() {
     e.preventDefault();
     setErr(''); setPend(false); setMsg('');
     try {
-      await login({ correo: form.correo, password: form.password });
+      await login({ correo: form.correo, password: form.password });                       // ③ redirige al éxito
     } catch (e) {
       if (e.response?.status === 403) {
-        // backend devolvió “Debes confirmar tu correo”
-        setPend(true);
+        setPend(true);                            // cuenta sin verificar
       } else {
         setErr(e.response?.data?.msg || 'Credenciales inválidas');
       }
     }
-    
   };
-
   const reenviar = async () => {
     setMsg(''); setErr('');
     try {
