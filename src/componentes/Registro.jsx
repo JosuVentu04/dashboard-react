@@ -37,7 +37,7 @@ export default function Registro() {
     e.preventDefault();
     setErr(''); setMsg('');
     try {
-      await api.post('/empleado', {
+      await api.post('/crear-empleado', {
         nombre:      form.nombre,
         correo:      form.correo,
         password:    form.password,
@@ -56,13 +56,13 @@ export default function Registro() {
 
   /* ---------- UI ---------- */
   return (
-    <div className="container py-5 col-md-5">
+    <div className="registro container py-5 col-md-5">
       <h3 className="mb-4 text-center">Crear cuenta</h3>
 
       {msg && <div className="alert alert-success">{msg}</div>}
       {err && <div className="alert alert-danger">{err}</div>}
 
-      <form onSubmit={submit}>
+      <form className='formulario-registro' onSubmit={submit}>
         <input
           className="form-control mb-3"
           name="nombre"
@@ -84,7 +84,7 @@ export default function Registro() {
 
         {/* selector de sucursal */}
         <select
-          className="form-select mb-3"
+          className=" form-select mb-3"
           name="sucursal_id"
           value={form.sucursal_id}
           onChange={handle}
@@ -92,7 +92,7 @@ export default function Registro() {
         >
           <option value="">Selecciona una sucursal...</option>
           {sucursales.map(s => (
-            <option key={s.id} value={s.id}>
+            <option className='opcion-sucursales' key={s.id} value={s.id}>
               {s.nombre}
             </option>
           ))}
@@ -109,12 +109,8 @@ export default function Registro() {
           minLength={6}
         />
 
-        <button className="btn btn-primary w-100">Registrarme</button>
+        <button className="btn-registro btn btn-primary w-100">Registrarme</button>
       </form>
-
-      <p className="mt-3 text-center">
-        ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
-      </p>
     </div> 
   );
 }

@@ -18,6 +18,11 @@ export default function Login() {
   const handle = e =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handleLogin = async (creds) => {
+    await login(creds);        // tu función de login del contexto
+    Navigate(from, { replace: true });
+  }
+
   const submit = async e => {
     e.preventDefault();
     setErr(''); setPend(false); setMsg('');
@@ -45,6 +50,7 @@ export default function Login() {
   return (
     <div className="container py-5 col-md-4">
       <h3 className="mb-4 text-center">Iniciar sesión</h3>
+      <img className='logo-login mb-3 text-center' src="LogoMarcel1.jpeg" alt="" />
 
       {err && <div className="alert alert-danger">{err}</div>}
       {msg && <div className="alert alert-success">{msg}</div>}
@@ -62,7 +68,7 @@ export default function Login() {
       <form onSubmit={submit}>
         <input
           type="email"
-          className="form-control mb-3"
+          className="formulario-login form-control mb-3"
           name="correo"
           placeholder="Correo"
           value={form.correo}
@@ -72,7 +78,7 @@ export default function Login() {
 
         <input
           type="password"
-          className="form-control mb-4"
+          className="formulario-login form-control mb-4"
           name="password"
           placeholder="Contraseña"
           value={form.password}
@@ -80,12 +86,12 @@ export default function Login() {
           required
         />
 
-        <button className="btn btn-primary w-100">Entrar</button>
+        <button className="btn-login btn text-black w-100">Entrar</button>
       </form>
 
-      <p className="mt-3 text-center">
+      {/* <p className="mt-3 text-center">
         ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
-      </p>
-    </div>
+      </p> */}
+    </div> 
   );
 }

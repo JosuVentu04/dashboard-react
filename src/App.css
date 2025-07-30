@@ -1,42 +1,318 @@
-
 .logo-superior-izquierda {
   position: absolute;
   top: 10px;
   left: 10px;
-  width: 250px; 
+  width: 250px;
 }
+
 .logo-centro {
   position: relative;
   top: auto;
-  width: 400px;
+  width: 20%;
 }
+
 .btn-logear {
   width: 400px;
-  background-color: #bdbdbd !important; /* Azul claro */
-  color: white ;
+  background-color: #bdbdbd !important;
+  /* Azul claro */
+  color: white;
   border: none;
 }
+
 .btn-logear:hover {
-  background-color: #014886 !important; /* color al pasar el mouse */
+  background-color: #014886 !important;
+  /* color al pasar el mouse */
   color: white !important;
 }
 
 .btn-logear:active {
-  background-color: #012f5a !important; /* color al hacer clic */
+  background-color: #012f5a !important;
+  /* color al hacer clic */
   color: white !important;
 }
 
 .btn-registrar {
   width: 400px;
-  background-color: #bdbdbd !important; /* Azul oscuro */
+  background-color: #bdbdbd !important;
+  /* Azul oscuro */
   border: none;
 }
+
 .btn-registrar:hover {
-  background-color: #014886 !important; /* color al pasar el mouse */
+  background-color: #014886 !important;
+  /* color al pasar el mouse */
   color: white !important;
 }
 
 .btn-registrar:active {
-  background-color: #012f5a  !important; /* color al hacer clic */
+  background-color: #012f5a !important;
+  /* color al hacer clic */
+  color: white !important;
+}
+
+.nav-link {
+  font-size: x-large !important;
+  font-weight: 500 !important;
+}
+
+.navbar-barra {
+  background: white !important;
+}
+
+.navbar {
+  background: white !important;
+}
+
+.nav-item {
+  position: relative !important;
+  padding-right: 25px;
+}
+
+.main-content {
+  background: #e8edf0 !important;
+}
+
+.dashboard-layout {
+  color: black !important;
+  background: #e8edf0 !important;
+  height: 750px;
+}
+
+.btn-login {
+  width: 400px;
+  background-color: #bdbdbd !important;
+  /* Azul oscuro */
+  border: none;
+}
+
+.btn-login:hover {
+  background-color: #014886 !important;
+  /* color al pasar el mouse */
+  color: white !important;
+}
+
+.btn-login:active {
+  background-color: #012f5a !important;
+  /* color al hacer clic */
+  color: white !important;
+}
+
+.logo-login {
+  margin-left: 25%;
+  width: 50%;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.btn-cuenta {
+  background-color: white;
+  color: #014886;
+
+}
+
+.formulario-login {
+  border-radius: 50px !important;
+}
+
+.btn-menu {
+  background-color: #bdbdbd !important;
+  /* Azul oscuro */
+  border: none;
+}
+
+.btn-menu:hover {
+  background-color: #014886 !important;
+  /* color al pasar el mouse */
+  color: white !important;
+}
+
+.btn-menu:active {
+  background-color: #012f5a !important;
+  /* color al hacer clic */
+  color: white !important;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  /* Oculto inicialmente */
+  width: 250px;
+  height: 100%;
+  border: black;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 1rem;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+/* Botón flechita dentro del sidebar (a la derecha del menú) */
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 48%;
+  right: -40px;
+  /* Justo al borde derecho del sidebar */
+  background-color: #bdbdbd;
+  border: none;
+  color: white;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 100%;
+  z-index: 1001;
+}
+
+.sidebar-toggle-btn:hover {
+  position: absolute;
+  top: 48%;
+  right: -40px;
+  /* Justo al borde derecho del sidebar */
+  background-color: #014886;
+  border: none;
+  color: white;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 100%;
+  z-index: 1001;
+}
+
+.sidebar-toggle-btn:active {
+  position: absolute;
+  top: 48%;
+  right: -40px;
+  /* Justo al borde derecho del sidebar */
+  background-color: #012f5a;
+  border: none;
+  color: white;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: 100%;
+  z-index: 1001;
+}
+
+/* Quitar subrayado y hacer los botones iguales */
+.sidebar-btn {
+  background-color: #bdbdbd;
+  border: 2px solid #bdbdbd;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 5px;
+}
+
+.sidebar-btn:hover {
+  background-color: #014886;
+  border: 2px solid #014886;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 5px;
+}
+
+.sidebar-btn:active {
+  background-color: #012f5a;
+  border: 1px solid #012f5a;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 5px;
+}
+
+/* Quitar puntitos y separación */
+.Sidebar-opciones {
+  list-style: none;
+  padding: 10px 0;
+}
+
+/* Capa oscura al fondo */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 900;
+}
+
+.PaginaInicio {
+  min-height: 100vh;
+  /* altura mínima de la ventana */
+  display: flex;
+  flex-direction: column;
+  /* ← para que se vea en blanco */
+}
+
+.dropdown-item:hover {
+  background-color: #014886 !important;
+  border: 2px solid #014886 !important;
+  color: white !important;
+}
+
+.dropdown-item:active {
+  background-color: #012f5a !important;
+  border: 2px solid #012f5a !important;
+  color: white !important;
+}
+
+.formulario-registro {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+}
+
+.registro {
+  border-radius: 25px;
+  height: 90%;
+  padding-top: 100px !important;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* ← sombra */
+}
+.btn-registro {
+  background-color: #bdbdbd !important;
+  border: 2px solid #bdbdbd !important;
+  color: white !important;
+}
+.btn-registro:hover,
+.opcion-sucursales:hover {
+  background-color: #014886 !important;
+  border: 2px solid #014886 !important;
+  color: white !important;
+}
+
+.btn-registro:active,
+.opcion-sucursales:active {
+  background-color: #012f5a !important;
+  border: 2px solid #012f5a !important;
+  color: white !important;
+}
+.perfil-btn:hover {
+  background-color: #d70103 !important;
+  border: 2px solid #d70103 !important;
+  color: white !important;
+}
+.perfil-btn:active {
+  background-color: #9f0104 !important;
+  border: 2px solid #9f0104 !important;
   color: white !important;
 }
