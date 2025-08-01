@@ -1,14 +1,15 @@
 import { useSearchParams, Link } from 'react-router-dom';
 
 export default function CorreoVerificado() {
-  const [q]     = useSearchParams();
-  const status  = q.get('status');            // ok | expired | invalid
+  const [q] = useSearchParams();
+  const status = q.get('status');            // ok | expired | invalid
 
-  const info = {
-    ok:      { txt: '¡Correo verificado con éxito!', tipo: 'success' },
-    expired: { txt: 'El enlace ha expirado.',        tipo: 'warning' },
-    invalid: { txt: 'El enlace no es válido.',       tipo: 'danger' }
-  }[status] || info.invalid;
+  const lookup = {
+    ok: { txt: '¡Correo verificado con éxito!', tipo: 'success' },
+    expired: { txt: 'El enlace ha expirado.', tipo: 'warning' },
+    invalid: { txt: 'El enlace no es válido.', tipo: 'danger' }
+  };
+  const info = lookup[status] || lookup.invalid;
 
   return (
     <div className="container col-md-5 py-5 text-center">

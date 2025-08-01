@@ -70,6 +70,7 @@
 
 .main-content {
   background: #e8edf0 !important;
+  height: 100%;
 }
 
 .dashboard-layout {
@@ -286,33 +287,87 @@
   border-radius: 25px;
   height: 90%;
   padding-top: 100px !important;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); /* ← sombra */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+  /* ← sombra */
 }
-.btn-registro {
+
+.btn-registro,
+.btn-editar-nombre,
+.btn-solicitar-nuevo-correo,
+.btn-editar-perfil {
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
+  border-radius: 5px;
+  width: 100%;
+  color: black !important;
+  padding: 5px;
 }
+
 .btn-registro:hover,
-.opcion-sucursales:hover {
+.opcion-sucursales:hover,
+.btn-editar-nombre:hover,
+.btn-solicitar-nuevo-correo:hover,
+.btn-editar-perfil:hover {
   background-color: #014886 !important;
   border: 2px solid #014886 !important;
   color: white !important;
+  border-radius: 5px;
+  width: 100%;
 }
 
 .btn-registro:active,
-.opcion-sucursales:active {
+.opcion-sucursales:active,
+.btn-editar-nombre:active,
+.btn-solicitar-nuevo-correo:active,
+.btn-editar-perfil:active {
   background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
   color: white !important;
+  border-radius: 5px;
+  width: 100%;
 }
-.perfil-btn:hover {
+
+.perfil-btn:hover,
+.btn-cancelar-edicion:hover {
   background-color: #d70103 !important;
   border: 2px solid #d70103 !important;
   color: white !important;
 }
-.perfil-btn:active {
+
+.perfil-btn:active,
+.btn-cancelar-edicion:active {
   background-color: #9f0104 !important;
   border: 2px solid #9f0104 !important;
   color: white !important;
+}
+
+.btn-cancelar-edicion {
+  background-color: #bdbdbd !important;
+  border: 2px solid #bdbdbd !important;
+  color: white !important;
+  width: 100%;
+  color: black !important;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.input-nuevo-correo {
+  width: 100% !important;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px;
+  border-color: #dee2ed;
+  border-style: solid;
+
+}
+
+.label-nuevo-correo {
+  width: 100%;
+}
+
+.componente-perfil {
+  background: #b7bdc1;
+  border-radius: 5px;
+  height:98% ;
 }

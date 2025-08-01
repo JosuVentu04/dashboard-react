@@ -20,6 +20,8 @@ export default function Rutas() {
         <DashboardLayout />
       </RequireAuth>}>
         <Route path="/" element={<PaginaInicio />} />
+        <Route path='/confirmar-email-antiguo/:token' element={<ConfirmarEmail/>}></Route>
+        <Route path='/confirmar-email-nuevo/:token' element={<ConfirmarEmail/>}></Route>
         <Route path="/registro" element={<Registro />} />
         <Route path='/mi-perfil' element={<Perfil/>}></Route>
       </Route>

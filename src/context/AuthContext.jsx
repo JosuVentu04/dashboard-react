@@ -30,7 +30,7 @@ export function AuthProvider({ children }) {
 
     // guarda el JWT una sola vez
     localStorage.setItem('token', data.access_token);
-    setToken(data.access_token);
+    setToken(data.access_token); 
 
     // header inmediato para las llamadas siguientes
     api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
     // carga el perfil antes de redirigir
     const me = await api.get('/auth/me', {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${data.access_token}}`
       }
     });
     console.log(me);
