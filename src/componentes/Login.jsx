@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import logo from '../assets/LogoMarcel1.jpeg';
+import { useSucursal } from '../context/SucursalContext';
 
 export default function Login() {
+  const { sucursal, setSucursal } = useSucursal() || {};
   const { login, api } = useAuth();              // api lo usamos para reenviar
-  const { state }    = useLocation();            // trae correoPendiente
+  const { state } = useLocation();            // trae correoPendiente
   const [form, setForm] = useState({
     correo: state?.correoPendiente || '',
     password: ''
   });
 
-  const [err,   setErr]   = useState('');
-  const [pend,  setPend]  = useState(false);     // cuenta no verificada
-  const [msg,   setMsg]   = useState('');        // aviso al reenviar
+  const [err, setErr] = useState('');
+  const [pend, setPend] = useState(false);     // cuenta no verificada
+  const [msg, setMsg] = useState('');        // aviso al reenviar
 
   /* ---------- handlers ---------- */
   const handle = e =>
@@ -27,10 +30,14 @@ export default function Login() {
     e.preventDefault();
     setErr(''); setPend(false); setMsg('');
     try {
-      await login({ correo: form.correo, password: form.password });                       // ③ redirige al éxito
+      await login({ correo: form.correo, password: form.password, sucursal_id: sucursal?.id });                       // ③ redirige al éxito
     } catch (e) {
       if (e.response?.status === 403) {
-        setPend(true);                            // cuenta sin verificar
+        setPend(true);
+      if (!sucursal) {
+        setErr('Por favor selecciona una sucursal primero.');
+        return;
+        }                      // cuenta sin verificar
       } else {
         setErr(e.response?.data?.msg || 'Credenciales inválidas');
       }
@@ -50,7 +57,7 @@ export default function Login() {
   return (
     <div className="container py-5 col-md-4">
       <h3 className="mb-4 text-center">Iniciar sesión</h3>
-      <img className='logo-login mb-3 text-center' src="LogoMarcel1.jpeg" alt="" />
+      <img className='logo-login mb-3 text-center' src={logo} alt="" />
 
       {err && <div className="alert alert-danger">{err}</div>}
       {msg && <div className="alert alert-success">{msg}</div>}
@@ -92,6 +99,6 @@ export default function Login() {
       {/* <p className="mt-3 text-center">
         ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
       </p> */}
-    </div> 
+    </div>
   );
 }

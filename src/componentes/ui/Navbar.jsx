@@ -1,35 +1,46 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-
+import { useSucursal } from '../../context/SucursalContext';
+import logo from '../../assets/LogoMarcel1.jpeg';
+import titulo from '../../assets/TituloMarcel1.jpeg';
 
 export default function Navbar({ onLogout }) {
+  const { sucursal, setSucursal } = useSucursal() || {};
+
+
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const Salir = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('sucursal');
+    localStorage.removeItem('sucursal.id')
     if (onLogout) onLogout();
-    navigate('/login'); // Redirige a la página principal ("/")
+    navigate('/seleccionar-sucursal'); // Redirige a la página principal ("/")
   };
   console.log("user:", user);
   console.log("user.rol:", user?.rol);
+
+  if (!sucursal) {
+    return <p>Cargando sucursal...</p>; // o estado previo
+  }
 
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="navbar-barra container-fluid">
         <a className="px-3 navbar-brand" href="/">
           <img
-            src="/LogoMarcel1.jpeg"
+            src={logo}
             alt="Logo de Marcel"
             width="60"
             height="auto"
             className="pt-1 d-inline-block align-top"
           />
           <img
-            src="/TituloMarcel1.jpeg"
+            src={titulo}
             alt="Titulo de marcel"
             width="280"
             height="auto"
@@ -50,6 +61,9 @@ export default function Navbar({ onLogout }) {
 
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ms-auto">
+            <li className= "nav-item">
+              <Link className="nav-link" to={`/sucursales/${sucursal.id}`}>{sucursal.nombre}</Link>
+            </li>
             <li className="nav-item">
               <a className="nav-link" href="#">Ayuda</a>
             </li>
@@ -57,7 +71,7 @@ export default function Navbar({ onLogout }) {
               <a className="nav-link" href="#">Soporte</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">Inventario</a>
+              <Link to = "/catalogo" className="nav-link">Catalogo</Link>
             </li>
             {user && user.rol === 'GERENTE' && (
               <li className="nav-item dropdown">

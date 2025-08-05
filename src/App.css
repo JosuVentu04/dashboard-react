@@ -5,10 +5,15 @@
   width: 250px;
 }
 
-.logo-centro {
+.logo-centro{
   position: relative;
   top: auto;
   width: 20%;
+}
+.img-selector-sucursal {
+  position: relative;
+  top: auto;
+  width: 40%;
 }
 
 .btn-logear {
@@ -242,7 +247,8 @@
 }
 
 /* Quitar puntitos y separación */
-.Sidebar-opciones {
+.Sidebar-opciones,
+.sucursales-opciones {
   list-style: none;
   padding: 10px 0;
 }
@@ -294,7 +300,7 @@
 .btn-registro,
 .btn-editar-nombre,
 .btn-solicitar-nuevo-correo,
-.btn-editar-perfil {
+.btn-editar-perfil{
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
@@ -370,4 +376,77 @@
   background: #b7bdc1;
   border-radius: 5px;
   height:98% ;
+}
+.btn-barra-busqueda-catalogo{
+  height: 100%;
+  width: 100% !important;
+  margin-left: 5px;
+  width: 70% !important;
+  padding-left: 10px !;
+  padding-right: 10px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+  color: black !important;
+  border-style: solid;
+  border-width: 1px !important;
+  border-radius: 5px;
+}
+.btn-barra-busqueda-catalogo:hover{
+  margin-left: 5px;
+  width: 70% !important;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+  border-color: #014886 !important;
+  background-color: #014886;
+  color: white !important;
+  border-style: solid;
+  border-width: 2px !important;
+}
+.btn-barra-busqueda-catalogo:active{
+  margin-left: 5px;
+  width: 70% !important;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+  border-color: #012f5a !important;
+  background-color: #012f5a;
+  color: white !important;
+  border-style: solid;
+  border-width: 2px !important;
+}
+.formulario-sucursales {
+  height: 100%;
+}
+.boton-opcion-sucursales {
+   background-color: #bdbdbd !important;
+  border: 2px solid #bdbdbd !important;
+  color: white !important;
+  border-radius: 5px;
+  width: 100%;
+  color: black !important;
+  padding: 8px;
+  margin: 3px;
+}
+.boton-opcion-sucursales:hover {
+   background-color: #014886 !important;
+  border: 2px solid #014886 !important;
+  color: white !important;
+  border-radius: 5px;
+  width: 100%;
+  color: white !important;
+  padding: 8px;
+  margin: 3px;
+}
+.boton-opcion-sucursales:active {
+   background-color: #012f5a !important;
+  border: 2px solid #012f5a !important;
+  color: white !important;
+  border-radius: 5px;
+  width: 100%;
+  color: white !important;
+  padding: 8px;
+  margin: 3px;
 }

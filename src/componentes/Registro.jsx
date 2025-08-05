@@ -39,7 +39,7 @@ export default function Registro() {
       setMsg('¡Cuenta creada! Revisa tu correo y confirma para iniciar sesión.');
       setForm({ nombre: '', correo: '', password: '' });
 
-      navigate('/login', { state: { correoPendiente: form.correo } });
+      navigate('/seleccionar-sucursal', { state: { correoPendiente: form.correo } });
     } catch (e) {
       const msg = e.response?.data?.error || 'No se pudo registrar';
       console.error(e);

@@ -15,7 +15,7 @@ export default function Sidebar() {
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <nav>
           <ul>
-            <li className='Sidebar-opciones'><Link className=" sidebar-btn " to="/dashboard">Inventario</Link></li>
+            <li className='Sidebar-opciones'><Link className=" sidebar-btn " to="/catalogo">Catalogo</Link></li>
             <li className='Sidebar-opciones'><Link className=" sidebar-btn " to="/ventas">Ventas</Link></li>
             <li className='Sidebar-opciones'><Link className=" sidebar-btn " to="/clientes">Clientes</Link></li>
             <li className='Sidebar-opciones'><Link className=" sidebar-btn " to="/reportes">Reportes</Link></li>

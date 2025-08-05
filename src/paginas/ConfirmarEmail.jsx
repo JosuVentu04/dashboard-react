@@ -14,7 +14,7 @@ export default function CorreoVerificado() {
   return (
     <div className="container col-md-5 py-5 text-center">
       <div className={`alert alert-${info.tipo}`}>{info.txt}</div>
-      <Link to="/login" className="btn btn-primary">Ir al login</Link>
+      <Link to="/seleccionar-sucursal" className="btn btn-primary">Ir al selector de sucursal</Link>
     </div>
   );
 }
