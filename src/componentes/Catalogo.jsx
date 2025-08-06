@@ -49,12 +49,6 @@ export default function Catalogo() {
                 <li className="nav-item">
                   <a className="nav-link" href="#">ZTE</a>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">Features</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link disabled" href="#" tabIndex={-1} aria-disabled="true">Disabled</a>
-                </li>
               </ul>
             </div>
           </div>

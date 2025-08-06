@@ -5,11 +5,12 @@
   width: 250px;
 }
 
-.logo-centro{
+.logo-centro {
   position: relative;
   top: auto;
   width: 20%;
 }
+
 .img-selector-sucursal {
   position: relative;
   top: auto;
@@ -248,9 +249,10 @@
 
 /* Quitar puntitos y separación */
 .Sidebar-opciones,
-.sucursales-opciones {
+.sucursales-opciones,
+.empleados-lista {
   list-style: none;
-  padding: 10px 0;
+  padding: 10px !important;
 }
 
 /* Capa oscura al fondo */
@@ -300,7 +302,7 @@
 .btn-registro,
 .btn-editar-nombre,
 .btn-solicitar-nuevo-correo,
-.btn-editar-perfil{
+.btn-editar-perfil {
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
@@ -375,9 +377,10 @@
 .componente-perfil {
   background: #b7bdc1;
   border-radius: 5px;
-  height:98% ;
+  height: 98%;
 }
-.btn-barra-busqueda-catalogo{
+
+.btn-barra-busqueda-catalogo {
   height: 100%;
   width: 100% !important;
   margin-left: 5px;
@@ -391,7 +394,8 @@
   border-width: 1px !important;
   border-radius: 5px;
 }
-.btn-barra-busqueda-catalogo:hover{
+
+.btn-barra-busqueda-catalogo:hover {
   margin-left: 5px;
   width: 70% !important;
   padding-left: 5px;
@@ -404,7 +408,8 @@
   border-style: solid;
   border-width: 2px !important;
 }
-.btn-barra-busqueda-catalogo:active{
+
+.btn-barra-busqueda-catalogo:active {
   margin-left: 5px;
   width: 70% !important;
   padding-left: 5px;
@@ -417,11 +422,13 @@
   border-style: solid;
   border-width: 2px !important;
 }
+
 .formulario-sucursales {
   height: 100%;
 }
+
 .boton-opcion-sucursales {
-   background-color: #bdbdbd !important;
+  background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
   border-radius: 5px;
@@ -430,8 +437,9 @@
   padding: 8px;
   margin: 3px;
 }
+
 .boton-opcion-sucursales:hover {
-   background-color: #014886 !important;
+  background-color: #014886 !important;
   border: 2px solid #014886 !important;
   color: white !important;
   border-radius: 5px;
@@ -440,8 +448,9 @@
   padding: 8px;
   margin: 3px;
 }
+
 .boton-opcion-sucursales:active {
-   background-color: #012f5a !important;
+  background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
   color: white !important;
   border-radius: 5px;
@@ -449,4 +458,28 @@
   color: white !important;
   padding: 8px;
   margin: 3px;
+}
+
+.informacion-sucursal {
+  background: #b7bdc1;
+  border-width: 2px;
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+}
+
+.apartado-informacion-sucursal,
+.apartado-informacion-empleados {
+  font-size: large;
+  margin-left: 50px;
+  margin-right: 50px;
+  padding: 10px;
+  background: white;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 3px;
+  border-color: #014886;
+}
+.empleados-lista th {
+  padding: 16px 64px; /* arriba/abajo, izq/der */
 }

@@ -7,8 +7,9 @@ import PaginaInicio from './componentes/PaginaInicio';
 import DashboardLayout from './componentes/Layout/DashboardLayout';
 import RequireAuth from './componentes/RequireAuth';
 import Perfil from './componentes/Perfil';
-import Catalogo from './componentes/catalogo';
+import Catalogo from './componentes/Catalogo';
 import SelectorSucursal from './componentes/SelectorSucursales';
+import InformacionSucursal from './componentes/InformacionSucursal';
 
 
 
@@ -22,6 +23,7 @@ export default function Rutas() {
       <Route element={<RequireAuth>
         <DashboardLayout />
       </RequireAuth>}>
+        <Route path='/sucursales/:sucursalId' element={<InformacionSucursal/>}></Route>
         <Route path="/" element={<PaginaInicio />} />
         <Route path='/confirmar-email-antiguo/:token' element={<ConfirmarEmail/>}></Route>
         <Route path='/confirmar-email-nuevo/:token' element={<ConfirmarEmail/>}></Route>
