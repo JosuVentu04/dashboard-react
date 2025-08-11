@@ -82,7 +82,7 @@
 .dashboard-layout {
   color: black !important;
   background: #e8edf0 !important;
-  height: 750px;
+  height: 100%;
 }
 
 .btn-login {
@@ -279,7 +279,6 @@
   border: 2px solid #014886 !important;
   color: white !important;
 }
-
 .dropdown-item:active {
   background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
@@ -287,15 +286,19 @@
 }
 
 .formulario-registro {
+  padding: 10px;
   padding-top: 25px !important;
   padding-bottom: 25px !important;
+  background: white;
+  border-radius: 5px;
 }
 
 .registro {
   border-radius: 25px;
   height: 90%;
   padding-top: 100px !important;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+  background:#b7bdc1 ;
+
   /* ← sombra */
 }
 
@@ -476,10 +479,64 @@
   padding: 10px;
   background: white;
   border-radius: 5px;
-  border-style: solid;
-  border-width: 3px;
-  border-color: #014886;
 }
 .empleados-lista th {
   padding: 16px 64px; /* arriba/abajo, izq/der */
+}
+.catalogo-sucursal,
+.catalogo-informacion {
+  width: 47%;
+  height: 40px;
+  background: #014886 !important;
+  color: white !important;
+  border-radius: 5px;
+  margin: 5px;
+}
+.catalogo-sucursal:hover,
+.catalogo-informacion:hover {
+  width: 47%;
+  height: 40px;
+  background: #023f75 !important;
+  color: white !important;
+  border-radius: 5px;
+  margin: 5px;
+}
+.catalogo-sucursal:active,
+.catalogo-informacion:active {
+  width: 47%;
+  height: 40px;
+  background: #012f5a !important;
+  color: white !important;
+  border-radius: 5px;
+  margin: 5px;
+}
+.boton-volver-catalogo {
+  background-color: #bdbdbd !important;
+  border: 2px solid #bdbdbd !important;
+  color: white !important;
+  border-radius: 5px;
+  color: black !important;
+  padding: 5px;
+}
+
+.boton-volver-catalogo:hover {
+  background-color: #014886 !important;
+  border: 2px solid #014886 !important;
+  color: white !important;
+  border-radius: 5px;
+}
+
+.boton-volver-catalogo:active {
+  background-color: #012f5a !important;
+  border: 2px solid #012f5a !important;
+  color: white !important;
+  border-radius: 5px;
+
+}
+.descripcion-catalogo {
+  white-space: nowrap !important;          /* evita saltos de línea */
+  overflow: hidden !important;             /* oculta el texto que se sale */
+  text-overflow: ellipsis !important;      /* agrega los "..." */
+  max-width: 100% !important;
+  display: block;             /* ancho máximo del contenedor */
 }

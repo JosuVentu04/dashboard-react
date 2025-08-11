@@ -10,6 +10,8 @@ import Perfil from './componentes/Perfil';
 import Catalogo from './componentes/Catalogo';
 import SelectorSucursal from './componentes/SelectorSucursales';
 import InformacionSucursal from './componentes/InformacionSucursal';
+import ModeloDetalle from './paginas/ModeloDetalle';
+import { PrivateRoute } from './context/RutasPrivadas';
 
 
 
@@ -23,13 +25,16 @@ export default function Rutas() {
       <Route element={<RequireAuth>
         <DashboardLayout />
       </RequireAuth>}>
-        <Route path='/sucursales/:sucursalId' element={<InformacionSucursal/>}></Route>
+        <Route path='/sucursales/:sucursalId' element={<InformacionSucursal />}></Route>
         <Route path="/" element={<PaginaInicio />} />
-        <Route path='/confirmar-email-antiguo/:token' element={<ConfirmarEmail/>}></Route>
-        <Route path='/confirmar-email-nuevo/:token' element={<ConfirmarEmail/>}></Route>
-        <Route path="/registro" element={<Registro />} />
-        <Route path='/mi-perfil' element={<Perfil/>}></Route>
-        <Route path='/catalogo' element={<Catalogo/>}></Route>
+        <Route path='/confirmar-email-antiguo/:token' element={<ConfirmarEmail />}></Route>
+        <Route path='/confirmar-email-nuevo/:token' element={<ConfirmarEmail />}></Route>
+        <Route element={<PrivateRoute allowedRoles={["GERENTE", "ADMIN", "SOPORTE"]} />}>
+          <Route path="/registro" element={<Registro/>} />
+        </Route>
+        <Route path='/mi-perfil' element={<Perfil />}></Route>
+        <Route path='/catalogo' element={<Catalogo />}></Route>
+        <Route path="/catalogo/modelo/:id" element={<ModeloDetalle />} />
       </Route>
       <Route path="*" element={<h1 className="text-center mt-5">404 – Esta no es la pagina que estas buscando</h1>} />
     </Routes>

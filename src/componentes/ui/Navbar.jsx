@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -61,7 +61,7 @@ export default function Navbar({ onLogout }) {
 
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ms-auto">
-            <li className= "nav-item">
+            <li className="nav-item">
               <Link className="nav-link" to={`/sucursales/${sucursal.id}`}>{sucursal.nombre}</Link>
             </li>
             <li className="nav-item">
@@ -71,9 +71,9 @@ export default function Navbar({ onLogout }) {
               <a className="nav-link" href="#">Soporte</a>
             </li>
             <li className="nav-item">
-              <Link to = "/catalogo" className="nav-link">Catalogo</Link>
+              <Link to="/catalogo" className="nav-link">Catalogo</Link>
             </li>
-            {user && user.rol === 'GERENTE' && (
+            {user && ["GERENTE", "ADMIN", "SOPORTE"].includes((user.rol || "").toUpperCase()) && (
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -88,9 +88,17 @@ export default function Navbar({ onLogout }) {
                   <li><a className="dropdown-item" href="#">Usuarios</a></li>
                   <li><a className="dropdown-item" href="#">Empleados</a></li>
                   <li><a className="dropdown-item" href="#">Otras sucursales</a></li>
-                  <li><a className="dropdown-item" href="/registro">Crear empleado</a></li>
+                  <li><a className="dropdown-item" href="/registro">Registrar Empleado</a></li>
                   <li><a className="dropdown-item" href="#">Registrar Dispositivos</a></li>
-                  <li><a className="dropdown-item" href="#">Gestionar Tienda</a></li>
+                  {["ADMIN"].includes((user.rol || "").toUpperCase()) && (
+                    <>
+                      <li className='text-center'> <strong>Administracion</strong></li>
+                      <li><a className='dropdown-item' href='#'>Registrar Gerente</a></li>
+                      <li><a className='dropdown-item' href='#'>Deshabilitar Empleado</a></li>
+                      <li><a className="dropdown-item" href="#">Registrar Modelo</a></li>
+                      <li><a className="dropdown-item" href="#">Editar Modelo</a></li>
+                    </>
+                  )}
                 </ul>
               </li>
             )}

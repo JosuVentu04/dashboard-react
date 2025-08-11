@@ -24,13 +24,16 @@ export function AuthProvider({ children }) {
     return inst;
   }, []);
 
+  const allowedRoles = ["GERENTE", "ADMIN", "SOPORTE"];
+  const isPermitted = user => user && allowedRoles.includes((user.rol || "").toUpperCase());
+
   /* 2️⃣ Login */
   const login = async creds => {
     const { data } = await api.post('/auth/login', creds);
 
     // guarda el JWT una sola vez
     localStorage.setItem('token', data.access_token);
-    setToken(data.access_token); 
+    setToken(data.access_token);
 
     // header inmediato para las llamadas siguientes
     api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
@@ -49,23 +52,30 @@ export function AuthProvider({ children }) {
 
   /* 3️⃣ Hidrata el usuario al refrescar la SPA */
   useEffect(() => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    api.defaults.headers.common.Authorization = `Bearer ${token}`;
-    api.get('/auth/me')
-       .then(res => setUser(res.data))
-       .catch(() => {
-         localStorage.removeItem('token');
-         setUser(null);
-       })
-       .finally(() => setLoading(false));
-  } else {
-    setLoading(false);
-  }
-}, [token]);                           // api es estable, no hace falta listarla
+    const token = localStorage.getItem('token');
+    if (token) {
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+      api.get('/auth/me')
+        .then(res => setUser(res.data))
+        .catch(() => {
+          localStorage.removeItem('token');
+          setUser(null);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, [token]);                           // api es estable, no hace falta listarla
 
   return (
-    <AuthContext.Provider value={{ user, token, login, api, loading }}>
+    <AuthContext.Provider value={{
+      user,
+      token,
+      login,
+      api,
+      loading,
+      isPermitted: () => user && allowedRoles.includes((user.rol || "").toUpperCase())
+    }}>
       {children}
     </AuthContext.Provider>
   );

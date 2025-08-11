@@ -6,6 +6,18 @@ export default function Registro() {
   const { api, user } = useAuth();
   const navigate = useNavigate();
 
+   useEffect(() => {
+    if (user && !["GERENTE", "ADMIN", "SOPORTE"].includes((user.rol || "").toUpperCase())) {
+      navigate('/not-authorized');
+    }
+  }, [user, navigate]);
+
+  if (!user) return null; // o loading...
+  if (!user.sucursal_id) {
+      setErr('No se pudo determinar la sucursal asignada. Intenta recargar la página.');
+      return;
+    }
+
   const [form, setForm] = useState({
     nombre: '',
     correo: '',
@@ -23,10 +35,7 @@ export default function Registro() {
     setMsg('');
 
     // Validar que user y sucursal_id estén definidos antes de enviar
-    if (!user || !user.sucursal_id) {
-      setErr('No se pudo determinar la sucursal asignada. Intenta recargar la página.');
-      return;
-    }
+    
 
     try {
       await api.post('/crear-empleado', {

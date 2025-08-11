@@ -5,17 +5,19 @@ import Menu from '../ui/Menu';
 
 export default function DashboardLayout() {
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-layout d-flex flex-column min-vh-100 pb-1">
+      {/* Top navigation */}
       <Navbar />
 
-      {/* Botón y menú offcanvas */}
+      {/* Offcanvas menu (puede estar fijo o activado por botón) */}
       <Menu />
 
-      {/* Contenido principal */}
-      <main className="main-content">
+      {/* Main content area grows to fill space */}
+      <main className="flex-grow-1 main-content">
         <Outlet />
       </main>
 
+      {/* Footer at the very bottom */}
       <Footer />
     </div>
   );

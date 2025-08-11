@@ -43,7 +43,7 @@ export default function InformacionSucursal() {
   if (!sucursalInfo) return <p>Selecciona una sucursal</p>;
 
   return (
-    <div className=" container">
+    <div className=" container py-3">
       <div className="row">
         <div className="col-2"></div>
         <div className="col-8 mt-3 p-3 informacion-sucursal">
