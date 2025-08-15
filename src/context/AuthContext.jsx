@@ -28,27 +28,24 @@ export function AuthProvider({ children }) {
   const isPermitted = user => user && allowedRoles.includes((user.rol || "").toUpperCase());
 
   /* 2️⃣ Login */
-  const login = async creds => {
-    const { data } = await api.post('/auth/login', creds);
+const login = async creds => {
+  const { data } = await api.post('/auth/login', creds);
 
-    // guarda el JWT una sola vez
-    localStorage.setItem('token', data.access_token);
-    setToken(data.access_token);
+  localStorage.setItem('token', data.access_token);
+  setToken(data.access_token);
+  api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
 
-    // header inmediato para las llamadas siguientes
-    api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
+  const me = await api.get('/auth/me', {
+    headers: {
+      Authorization: `Bearer ${data.access_token}`
+    }
+  });
 
-    // carga el perfil antes de redirigir
-    const me = await api.get('/auth/me', {
-      headers: {
-        Authorization: `Bearer ${data.access_token}}`
-      }
-    });
-    console.log(me);
-    setUser(me.data);
+  setUser(me.data);
 
-    navigate('/');                       // o '/landing'
-  };
+  navigate('/');
+  return me.data; // 🔹 devolvemos el usuario para que Login.jsx lo use
+};
 
   /* 3️⃣ Hidrata el usuario al refrescar la SPA */
   useEffect(() => {

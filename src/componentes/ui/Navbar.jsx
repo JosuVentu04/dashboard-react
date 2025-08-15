@@ -85,6 +85,7 @@ export default function Navbar({ onLogout }) {
                   Gestion
                 </a>
                 <ul className="dropdown-menu">
+                  <li className='text-center'> <strong>Gerencia</strong></li>
                   <li><a className="dropdown-item" href="#">Usuarios</a></li>
                   <li><a className="dropdown-item" href="#">Empleados</a></li>
                   <li><a className="dropdown-item" href="#">Otras sucursales</a></li>
@@ -93,10 +94,11 @@ export default function Navbar({ onLogout }) {
                   {["ADMIN"].includes((user.rol || "").toUpperCase()) && (
                     <>
                       <li className='text-center'> <strong>Administracion</strong></li>
-                      <li><a className='dropdown-item' href='#'>Registrar Gerente</a></li>
-                      <li><a className='dropdown-item' href='#'>Deshabilitar Empleado</a></li>
-                      <li><a className="dropdown-item" href="#">Registrar Modelo</a></li>
-                      <li><a className="dropdown-item" href="#">Editar Modelo</a></li>
+                      <li><Link to='/registrar-gerente' className='dropdown-item'> Registrar Gerente</Link></li>
+                      <li><Link to='/deshabilitar-empleados' className='dropdown-item'>Deshabilitar Empleado </Link></li>
+                      <li>
+                        <Link to="/registrar-modelo" className='dropdown-item registrar-modelo-nav-item '>Registrar Modelo</Link>
+                      </li>
                     </>
                   )}
                 </ul>

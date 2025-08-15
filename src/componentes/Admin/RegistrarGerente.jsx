@@ -1,33 +1,31 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
-export default function Registro() {
+export default function RegistrarGerente() {
   const { api, user } = useAuth();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-   useEffect(() => {
-    if (user && !["GERENTE", "ADMIN", "SOPORTE"].includes((user.rol || "").toUpperCase())) {
-      navigate('/not-authorized'); 
-    }
-  }, [user, navigate]);
-
-  if (!user) return null; // o loading...
-  if (!user.sucursal_id) {
-      setErr('No se pudo determinar la sucursal asignada. Intenta recargar la página.');
-      return;
-    }
-
-  const [form, setForm] = useState({
-    nombre: '',
-    correo: '',
-    password: '',
-    numero_telefonico: ''
-  });
+  const [form, setForm] = useState({ nombre: '', correo: '', password: '',numero_telefonico: '' });
   const [msg, setMsg] = useState('');
   const [err, setErr] = useState('');
 
-  // Handler para capturar inputs
+  // 🔹 Comprobación de permisos
+  useEffect(() => {
+    if (user && !["ADMIN"].includes((user.rol || "").toUpperCase())) {
+      navigate('/not-authorized');
+    }
+  }, [user, navigate]);
+
+  // 🔹 Validar sucursal asignada
+  useEffect(() => {
+    if (user && !user.sucursal_id) {
+      setErr('No se pudo determinar la sucursal asignada. Intenta recargar la página.');
+    }
+  }, [user]);
+
+  if (!user) return null; // loading...
+
   const handle = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const submit = async e => {
@@ -35,21 +33,21 @@ export default function Registro() {
     setErr('');
     setMsg('');
 
-    // Validar que user y sucursal_id estén definidos antes de enviar
+    if (!user?.sucursal_id) {
+      setErr('No se pudo determinar la sucursal asignada.');
+      return;
+    }
 
     try {
       await api.post('/crear-empleado', {
-        nombre: form.nombre,
-        correo: form.correo,
-        numero_telefonico: form.numero_telefonico,
-        password: form.password,
-        sucursal_id: user.sucursal_id, // Asignación automática de sucursal
+        ...form,
+        rol: "GERENTE",
+        sucursal_id: user.sucursal_id,
       });
 
       setMsg('¡Cuenta creada! Revisa tu correo y confirma para iniciar sesión.');
-      setForm({ nombre: '', correo: '', password: '', numero_telefonico: '' });
-
       navigate('/seleccionar-sucursal', { state: { correoPendiente: form.correo } });
+      setForm({ nombre: '', correo: '', password: '', numero_telefonico: '' });
     } catch (e) {
       const msg = e.response?.data?.error || 'No se pudo registrar';
       console.error(e);
@@ -59,7 +57,7 @@ export default function Registro() {
 
   return (
     <div className="registro container mt-4 py-5 col-md-5">
-      <h3 className="mb-4 text-center">Crear cuenta</h3>
+      <h3 className="mb-4 text-center">Crear Gerente</h3>
 
       {msg && <div className="alert alert-success">{msg}</div>}
       {err && <div className="alert alert-danger">{err}</div>}
@@ -73,7 +71,6 @@ export default function Registro() {
           onChange={handle}
           required
         />
-
         <input
           type="email"
           className="form-control mb-3"
@@ -92,9 +89,6 @@ export default function Registro() {
           onChange={handle}
           required
         />
-
-        {/* Ya no hay selector de sucursal */}
-
         <input
           type="password"
           className="form-control mb-4"
@@ -105,8 +99,7 @@ export default function Registro() {
           required
           minLength={6}
         />
-
-        <button className="btn-registro btn btn-primary w-100" type="submit">
+        <button className="btn-registro-gerente btn w-100" type="submit">
           Registrar
         </button>
       </form>

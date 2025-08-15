@@ -26,23 +26,42 @@ export default function Login() {
     Navigate(from, { replace: true });
   }
 
-  const submit = async e => {
-    e.preventDefault();
-    setErr(''); setPend(false); setMsg('');
-    try {
-      await login({ correo: form.correo, password: form.password, sucursal_id: sucursal?.id });                       // ③ redirige al éxito
-    } catch (e) {
-      if (e.response?.status === 403) {
-        setPend(true);
-      if (!sucursal) {
-        setErr('Por favor selecciona una sucursal primero.');
-        return;
-        }                      // cuenta sin verificar
-      } else {
-        setErr(e.response?.data?.msg || 'Credenciales inválidas');
-      }
+const submit = async e => {
+  e.preventDefault();
+  setErr('');
+  setPend(false);
+  setMsg('');
+
+  if (!sucursal) {
+    setErr('Por favor selecciona una sucursal primero.');
+    return;
+  }
+
+  try {
+    // login() debería devolver el usuario logueado
+    const usuario = await login({
+      correo: form.correo,
+      password: form.password,
+      sucursal_id: sucursal?.id
+    });
+
+    // 🔹 Validar si el usuario está ACTIVO
+    if ((usuario.estado_usuario || "").toUpperCase() !== "ACTIVO") {
+      setErr("Tu cuenta está inactiva. No puedes iniciar sesión.");
+      return;
     }
-  };
+
+    // si está activo, redirigir
+    Navigate("/", { replace: true });
+
+  } catch (e) {
+    if (e.response?.status === 403) {
+      setPend(true); // cuenta no verificada
+    } else {
+      setErr(e.response?.data?.msg || 'Credenciales inválidas');
+    }
+  }
+};
   const reenviar = async () => {
     setMsg(''); setErr('');
     try {

@@ -12,6 +12,10 @@ import SelectorSucursal from './componentes/SelectorSucursales';
 import InformacionSucursal from './componentes/InformacionSucursal';
 import ModeloDetalle from './paginas/ModeloDetalle';
 import { PrivateRoute } from './context/RutasPrivadas';
+import RegistrarModelo from './componentes/Admin/RegistrarModelo';
+import EditarModelo from './componentes/Admin/EditarModelo';
+import RegistrarGerente from './componentes/Admin/RegistrarGerente';
+import DeshabilitarEmpleado from './componentes/Admin/DeshabilitarEmpleado';
 
 
 
@@ -30,7 +34,13 @@ export default function Rutas() {
         <Route path='/confirmar-email-antiguo/:token' element={<ConfirmarEmail />}></Route>
         <Route path='/confirmar-email-nuevo/:token' element={<ConfirmarEmail />}></Route>
         <Route element={<PrivateRoute allowedRoles={["GERENTE", "ADMIN", "SOPORTE"]} />}>
-          <Route path="/registro" element={<Registro/>} />
+          <Route path="/registro" element={<Registro />} />
+        </Route> 
+        <Route element={<PrivateRoute allowedRoles={["ADMIN"]} />}>
+          <Route path='/registrar-modelo' element={<RegistrarModelo />}></Route>
+          <Route path='/editar-modelo/:id' element={<EditarModelo/>}></Route>
+          <Route path='/registrar-gerente' element={<RegistrarGerente/>}></Route>
+          <Route path='/deshabilitar-empleados' element={<DeshabilitarEmpleado/>}></Route>
         </Route>
         <Route path='/mi-perfil' element={<Perfil />}></Route>
         <Route path='/catalogo' element={<Catalogo />}></Route>

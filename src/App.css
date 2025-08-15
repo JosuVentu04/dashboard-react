@@ -37,20 +37,23 @@
   color: white !important;
 }
 
-.btn-registrar {
+.btn-registrar,
+.btn-registro-gerente {
   width: 400px;
   background-color: #bdbdbd !important;
   /* Azul oscuro */
   border: none;
 }
 
-.btn-registrar:hover {
+.btn-registrar:hover,
+.btn-registro-gerente:hover {
   background-color: #014886 !important;
   /* color al pasar el mouse */
   color: white !important;
 }
 
-.btn-registrar:active {
+.btn-registrar:active,
+.btn-registro-gerente:active {
   background-color: #012f5a !important;
   /* color al hacer clic */
   color: white !important;
@@ -112,7 +115,8 @@
 }
 
 .btn-cuenta {
-  background-color: white;
+  background-color: white !important;
+  border: 2px solid white !important;
   color: #014886;
 
 }
@@ -279,6 +283,7 @@
   border: 2px solid #014886 !important;
   color: white !important;
 }
+
 .dropdown-item:active {
   background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
@@ -294,10 +299,10 @@
 }
 
 .registro {
-  border-radius: 25px;
+  border-radius: 5px;
   height: 90%;
   padding-top: 100px !important;
-  background:#b7bdc1 ;
+  background: #b7bdc1;
 
   /* ← sombra */
 }
@@ -480,9 +485,12 @@
   background: white;
   border-radius: 5px;
 }
+
 .empleados-lista th {
-  padding: 16px 64px; /* arriba/abajo, izq/der */
+  padding: 16px 64px;
+  /* arriba/abajo, izq/der */
 }
+
 .catalogo-sucursal,
 .catalogo-informacion {
   width: 47%;
@@ -492,6 +500,7 @@
   border-radius: 5px;
   margin: 5px;
 }
+
 .catalogo-sucursal:hover,
 .catalogo-informacion:hover {
   width: 47%;
@@ -501,6 +510,7 @@
   border-radius: 5px;
   margin: 5px;
 }
+
 .catalogo-sucursal:active,
 .catalogo-informacion:active {
   width: 47%;
@@ -510,6 +520,7 @@
   border-radius: 5px;
   margin: 5px;
 }
+
 .boton-volver-catalogo {
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
@@ -533,10 +544,32 @@
   border-radius: 5px;
 
 }
+
 .descripcion-catalogo {
-  white-space: nowrap !important;          /* evita saltos de línea */
-  overflow: hidden !important;             /* oculta el texto que se sale */
-  text-overflow: ellipsis !important;      /* agrega los "..." */
+  white-space: nowrap !important;
+  /* evita saltos de línea */
+  overflow: hidden !important;
+  /* oculta el texto que se sale */
+  text-overflow: ellipsis !important;
+  /* agrega los "..." */
   max-width: 100% !important;
-  display: block;             /* ancho máximo del contenedor */
+  display: block;
+  /* ancho máximo del contenedor */
+}
+
+.icono-editar-modelo {
+  background-color: white !important;
+  border: 2px solid white !important;
+  margin-top: 10px;
+  font-size: 25px;
+  color: #014886;
+}
+
+.icono-eliminar-modelo {
+  background-color: white !important;
+  border: 2px solid white !important;
+  color: #d70103 !important;
+  margin-top: 10px;
+  font-size: 25px;
+  padding-right: 10px;
 }

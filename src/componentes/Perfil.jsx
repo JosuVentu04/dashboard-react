@@ -23,6 +23,7 @@ export default function PerfilEditable() {
       setForm({
         nombre: user.nombre || '',
         rol: user.rol || '',
+        numero_telefonico: user.numero_telefonico || '',
         estado_usuario: user.estado_usuario || '',
         is_verified: !!user.is_verified,
         sucursal_id: user.sucursal_id || '',
@@ -44,6 +45,7 @@ export default function PerfilEditable() {
     try {
       await api.put('/users/perfil', {
         nombre: form.nombre,
+        numero_telefonico: form.numero_telefonico
         // otros campos que quieras permitir editar
       });
       setMsg('Perfil actualizado correctamente.');
@@ -68,6 +70,7 @@ export default function PerfilEditable() {
           <div className="card mt-3 p-3">
             <p><strong>Nombre:</strong> {form.nombre}</p>
             <p><strong>Correo:</strong> {user.correo}</p>
+            <p><strong>Numero Telefonico:</strong>{form.numero_telefonico}</p>
             <p><strong>Rol:</strong> {form.rol}</p>
             <p><strong>Estado:</strong> {form.estado_usuario}</p>
             <p><strong>Verificado:</strong> {form.is_verified ? 'Sí' : 'No'}</p>
@@ -98,6 +101,18 @@ export default function PerfilEditable() {
               required
             />
           </div>
+          <div className="mb-3">
+            <label htmlFor="numero_telefonico" className="form-label"> <strong> Numero Telefonico</strong></label>
+            <input
+              id="numero_telefonico"
+              name="numero_telefonico"
+              type="number"
+              className="form-control"
+              value={form.numero_telefonico}
+              onChange={handleChange}
+              required
+            />
+          </div>      
 
           {/* Puedes poner aquí otros campos editables */}
 
