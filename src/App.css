@@ -253,8 +253,7 @@
 
 /* Quitar puntitos y separación */
 .Sidebar-opciones,
-.sucursales-opciones,
-.empleados-lista {
+.sucursales-opciones {
   list-style: none;
   padding: 10px !important;
 }
@@ -572,4 +571,97 @@
   margin-top: 10px;
   font-size: 25px;
   padding-right: 10px;
+}
+
+.sucursal-admin {
+  background-color: #b7bdc1 !important;
+}
+
+.empleados-lista {
+  list-style: none;
+  padding: 10px !important;
+  margin: 10px !important;
+  background: white !important;
+  border-radius: 5px;
+}
+
+.empleado-elemento-admin {
+  margin: 10px !important;
+  padding-bottom: 15px !important;
+}
+
+.botones-control-admin-deshabilitar {
+  min-width: 120px;
+  margin-right: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  background-color: #bdbdbd !important;
+  border: 2px solid #bdbdbd !important;
+  border-radius: 5px;
+  color: black !important;
+}
+
+.botones-control-admin-modificar {
+  min-width: 120px; 
+  margin-right: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  background-color: #014886 !important;
+  border: 2px solid #014886 !important;
+  border-radius: 5px;
+  color: white !important;
+}
+.botones-control-admin-deshabilitar:hover {
+  min-width: 120px;
+  margin-right: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  background-color: #d70103 !important;
+  border: 2px solid #d70103 !important;
+  border-radius: 5px;
+  color: white !important;
+}
+
+.botones-control-admin-modificar:hover {
+  min-width: 120px;
+  margin-right: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  background-color: #013d72 !important;
+  border: 2px solid #013d72 !important;
+  border-radius: 5px;
+  color: white !important;
+}
+.botones-control-admin-deshabilitar:active {
+  min-width: 120px;
+  margin-right: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  background-color: #9f0104 !important;
+  border: 2px solid #9f0104 !important;
+  border-radius: 5px;
+  color: white !important;
+}
+
+.botones-control-admin-modificar:active {
+  min-width: 120px;
+  margin-right: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  background-color: #012f5a !important;
+  border: 2px solid #012f5a !important;
+  border-radius: 5px;
+  color: white !important;
 }

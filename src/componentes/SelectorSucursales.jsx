@@ -11,7 +11,7 @@ export default function SelectorSucursal() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('https://didactic-space-acorn-v6qxr47wv9gxhxv64-5000.app.github.dev/sucursales')
+    fetch('http://192.168.1.122:5000/sucursales')
       .then(res => res.json())
       .then(data => setSucursales(data))
       .catch(() => setError('Error cargando sucursales'));

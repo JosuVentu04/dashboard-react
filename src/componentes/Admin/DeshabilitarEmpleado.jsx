@@ -93,7 +93,7 @@ export default function DeshabilitarEmpleado() {
         <p>No hay sucursales registradas.</p>
       ) : (
         sucursales.map((sucursal) => (
-          <div key={sucursal.id} className="mb-4 p-3 border rounded">
+          <div key={sucursal.id} className="sucursal-admin mb-4 p-3 border rounded">
             <h2>{sucursal.nombre}</h2>
             <p>
               <strong>ID:</strong> {sucursal.id} |{" "}
@@ -116,15 +116,16 @@ export default function DeshabilitarEmpleado() {
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="text-center">
+                <tbody className="empleados-caracteristicas text-center">
                   {sucursal.empleados.map((emp) => (
                     <tr key={emp.id}>
-                      <td>{emp.id}</td>
-                      <td>{emp.nombre}</td>
-                      <td>{emp.rol}</td>
-                      <td>{emp.estado_usuario}</td>
-                      <td>
+                      <td className="empleado-elemento-admin">{emp.id}</td>
+                      <td className="empleado-elemento-admin">{emp.nombre}</td>
+                      <td className="empleado-elemento-admin">{emp.rol}</td>
+                      <td className="empleado-elemento-admin">{emp.estado_usuario}</td>
+                      <td className="empleado-elemento-admin">
                         <button
+                          className="botones-control-admin-deshabilitar"
                           onClick={() =>
                             cambiarEstadoEmpleado(emp.id, emp.estado_usuario)
                           }
@@ -134,6 +135,7 @@ export default function DeshabilitarEmpleado() {
                             : "Deshabilitar"}
                         </button>
                         <button
+                          className="botones-control-admin-modificar"
                           onClick={() => {
                             setEditando(emp.id);
                             setForm({

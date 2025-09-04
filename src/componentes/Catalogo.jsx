@@ -22,7 +22,7 @@ export default function Catalogo() {
   useEffect(() => {
     setLoadingCatalogo(true);
     setError(null);
-    fetch("https://didactic-space-acorn-v6qxr47wv9gxhxv64-5000.app.github.dev/devices/catalogo-modelos")
+    fetch("http://127.0.0.1:5000/devices/catalogo-modelos")
       .then((res) => {
         if (!res.ok) throw new Error("Error al cargar información del catalogo");
         return res.json();

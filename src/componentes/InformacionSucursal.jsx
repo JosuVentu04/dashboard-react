@@ -17,7 +17,7 @@ export default function InformacionSucursal() {
     // Cargar información de la sucursal
     setLoadingSucursal(true);
     setError(null);
-    fetch(`https://didactic-space-acorn-v6qxr47wv9gxhxv64-5000.app.github.dev/sucursales/${sucursal.id}`)
+    fetch(`http://127.0.0.1:5000/sucursales/${sucursal.id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Error al cargar información de la sucursal");
         return res.json();
@@ -28,7 +28,7 @@ export default function InformacionSucursal() {
 
     // Cargar empleados de la sucursal
     setLoadingEmpleados(true);
-    fetch(`https://didactic-space-acorn-v6qxr47wv9gxhxv64-5000.app.github.dev/empleados?sucursal_id=${sucursal.id}`)
+    fetch(`http://127.0.0.1:5000/empleados?sucursal_id=${sucursal.id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Error al cargar empleados");
         return res.json();
