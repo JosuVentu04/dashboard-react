@@ -11,7 +11,7 @@ export default function QRPage() {
   const veriffUrl = query.get('url');        // URL original de veriff para verificación
   const sessionId = query.get('sessionId');
   // URL personalizada para captura manual (ajusta dominio y path reales)
-  const capturaUrl = sessionId ? `http://192.168.1.122:5173/captura?sessionId=${sessionId}` : null;
+  const capturaUrl = sessionId ? `http://localhost:3000/captura?sessionId=${sessionId}` : null;
   const navigate = useNavigate();
 
   const handleStartPolling = () => {

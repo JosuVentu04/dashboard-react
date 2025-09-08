@@ -11,7 +11,7 @@ export default function SelectorSucursal() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://192.168.1.122:5000/sucursales')
+    fetch('http://127.0.0.1:5000/sucursales')
       .then(res => res.json())
       .then(data => setSucursales(data))
       .catch(() => setError('Error cargando sucursales'));

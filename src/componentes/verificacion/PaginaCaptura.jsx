@@ -11,31 +11,36 @@ export default function CapturaPage() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    // Obtener sessionId de la URL
-    const params = new URLSearchParams(window.location.search);
-    const sId = params.get('sessionId');
-    setSessionId(sId);
+  const params = new URLSearchParams(window.location.search);
+  const sId = params.get('sessionId');
+  setSessionId(sId);
 
-    async function iniciarCamara() {
-      if (videoRef.current) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
-        } catch (err) {
-          setMensaje('Error al acceder a la cámara: ' + err.message);
-        }
-      }
+  async function iniciarCamara() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setMensaje('La API getUserMedia no está soportada en este navegador.');
+    console.error('API getUserMedia no soportada');
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+      await videoRef.current.play();
     }
+  } catch (err) {
+    setMensaje('Error al acceder a la cámara: ' + err.message);
+    console.error(err);
+  }
+}
 
-    iniciarCamara();
+  iniciarCamara();
 
-    return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach(t => t.stop());
-      }
-    };
-  }, []);
+  return () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+    }
+  };
+}, []);
 
   function tomarFoto() {
     if (!videoRef.current || !canvasRef.current) return;
