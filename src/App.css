@@ -520,7 +520,8 @@
   margin: 5px;
 }
 
-.boton-volver-catalogo {
+.boton-volver-catalogo,
+.boton-volver-incio {
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;

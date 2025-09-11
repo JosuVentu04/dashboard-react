@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-// Recibe sessionId como prop
 export default function VerificacionPolling({ sessionId }) {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,29 +12,53 @@ export default function VerificacionPolling({ sessionId }) {
   useEffect(() => {
     async function checkVerification() {
       try {
-        // Cambia esta URL por la de tu backend Flask
         const res = await api.get(`/api/veriff/status/${sessionId}`);
-        const verificacion = res.data.verifications && res.data.verifications[0];
-        setStatus(verificacion?.status);
+        const verification = res.data.verification;
+        const status = verification?.status;
+        setStatus(status);
         setLoading(false);
-        // Ejemplo: 'approved' es verificado exitoso según Veriff [web:54]
-        if (verificacion?.status === 'approved') {
-            clearInterval(intervalRef.current);
-             navigate('/verificacion-completa');
-     }
-        // Puedes manejar estados como 'declined', 'expired', etc. aquí también
+
+        if (status === 'approved') {
+          clearInterval(intervalRef.current);
+
+          // Extraer datos para crear cliente
+          const person = verification.person || {};
+          const doc = verification.document || {};
+
+          const clienteData = {
+            nombre: person.firstName || '',
+            apellido: person.lastName ||  '',
+            numero_identificacion: doc.number || '1234567', // Asumiendo vendorData es el DNI o similar
+            tipo_identificacion: doc.type ? doc.type.toLowerCase() : 'id_card',
+            correo: '',        // Agrega otros datos si los tienes
+            telefono: '',
+            direccion: ''
+          };
+
+          // Llamar endpoint para crear cliente
+          try {
+            await api.post('/users/crear-cliente', clienteData);
+            // Luego navega a página confirmación
+            navigate('/verificacion-completa');
+          } catch (err) {
+            console.error("Error creando cliente:", err);
+            // Opcional: mostrar mensaje de error o navegar a otra página
+          }
+        } else if (status === 'declined') {
+          clearInterval(intervalRef.current);
+          navigate('/verificacion-erronea');
+        }
       } catch (error) {
         setLoading(false);
         console.error('Error consultando estado de verificación', error);
       }
     }
 
-    // Poll cada 3 segundos
     intervalRef.current = setInterval(checkVerification, 3000);
-    checkVerification(); // Llama una vez al montar
+    checkVerification();
 
     return () => clearInterval(intervalRef.current);
-  }, [sessionId, navigate]);
+  }, [sessionId, navigate, api]);
 
   return (
     <div className="container text-center mt-4">

@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function CapturaPage() {
   const [sessionId, setSessionId] = useState(null);
   const [step, setStep] = useState(0); // 0: selfie, 1: ID frontal, 2: ID trasera, 3: listo
@@ -11,36 +13,42 @@ export default function CapturaPage() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const sId = params.get('sessionId');
-  setSessionId(sId);
+    const params = new URLSearchParams(window.location.search);
+    const sId = params.get('sessionId');
+    setSessionId(sId);
 
-  async function iniciarCamara() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    setMensaje('La API getUserMedia no está soportada en este navegador.');
-    console.error('API getUserMedia no soportada');
-    return;
-  }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream;
-      await videoRef.current.play();
+    let stream;
+
+    async function iniciarCamara() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setMensaje('La API getUserMedia no está soportada en este navegador.');
+        return;
+      }
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          if (videoRef.current.srcObject !== stream) {
+            videoRef.current.srcObject = stream;
+            await videoRef.current.play();
+          }
+        }
+      } catch (err) {
+        setMensaje('Error al acceder a la cámara: ' + err.message);
+      }
     }
-  } catch (err) {
-    setMensaje('Error al acceder a la cámara: ' + err.message);
-    console.error(err);
-  }
-}
 
-  iniciarCamara();
+    iniciarCamara();
 
-  return () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      videoRef.current.srcObject.getTracks().forEach(track => track.stop());
-    }
-  };
-}, []);
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   function tomarFoto() {
     if (!videoRef.current || !canvasRef.current) return;
@@ -56,28 +64,73 @@ export default function CapturaPage() {
     else if (step === 1) nuevasFotos.idFrontal = imgData;
     else if (step === 2) nuevasFotos.idTrasera = imgData;
     setFotos(nuevasFotos);
-    if (step < 2) setStep(step + 1);
-    else setMensaje('Fotos listas para enviar');
+    if (step < 2) {
+      setStep(step + 1);
+    } else {
+      setStep(3);  // para activar el botón
+      setMensaje('Fotos listas para enviar');
+    }
+  }
+
+  async function subirFoto(tipo, base64Image) {
+    let endpoint = '';
+    if (!sessionId) {
+      setMensaje('No hay sessionId para subir las fotos.');
+      throw new Error('sessionId no definido');
+    }
+    switch (tipo) {
+      case 'selfie':
+        endpoint = `${API_URL}/api/veriff/upload/selfie/${sessionId}`;
+        break;
+      case 'front':
+        endpoint = `${API_URL}/api/veriff/upload/front/${sessionId}`;
+        break;
+      case 'back':
+        endpoint = `${API_URL}/api/veriff/upload/back/${sessionId}`;
+        break;
+      default:
+        throw new Error('Tipo desconocido');
+    }
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: base64Image }),
+    });
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || 'Error subiendo foto');
+    }
+  }
+
+  async function enviarSesion() {
+    if (!sessionId) {
+      setMensaje('No hay sessionId para enviar la sesión.');
+      throw new Error('sessionId no definido');
+    }
+    const endpoint = `${API_URL}/api/veriff/submit-session/${sessionId}`;
+    const res = await fetch(endpoint, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || 'Error enviando sesión');
+    }
   }
 
   async function enviarFotos() {
     setSubiendo(true);
     setMensaje('');
     try {
-      const response = await fetch('/api/veriff/upload-photos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId,
-          photos: fotos,
-        }),
-      });
-      if (!response.ok) throw new Error('Error subiendo fotos');
-      setMensaje('Fotos enviadas correctamente');
+      await subirFoto('selfie', fotos.cara);
+      await subirFoto('front', fotos.idFrontal);
+      await subirFoto('back', fotos.idTrasera);
+      await enviarSesion();
+      setMensaje('Fotos y sesión enviadas correctamente');
       setStep(0);
       setFotos({ cara: null, idFrontal: null, idTrasera: null });
     } catch (error) {
-      setMensaje('Error al enviar fotos: ' + error.message);
+      setMensaje('Error: ' + error.message);
     } finally {
       setSubiendo(false);
     }
@@ -119,7 +172,7 @@ export default function CapturaPage() {
             disabled={subiendo}
             style={{ marginTop: 16, padding: '12px 25px', fontSize: 16 }}
           >
-            {subiendo ? 'Enviando...' : 'Enviar Fotos'}
+            {subiendo ? 'Enviando...' : 'Enviar Fotos y Sesión'}
           </button>
         </div>
       )}
