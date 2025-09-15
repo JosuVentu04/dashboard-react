@@ -23,6 +23,7 @@ import CapturaPage from './componentes/verificacion/PaginaCaptura';
 import VerificacionCompletada from './componentes/verificacion/VerificacionCompletada';
 import VerificacionErronea from './componentes/verificacion/VerificacionErronea';
 import HistorialVerificaciones from './componentes/Gerente/HistorialVerificaciones';
+import HmacExample from './componentes/pruebas/PruebaFirma';
 
 
 export default function Rutas() {
@@ -58,6 +59,7 @@ export default function Rutas() {
         <Route path="/polling" element={<VerificacionPollingWrapper />} />
         <Route path="/verificacion-completa" element={<VerificacionCompletada/>}></Route>
         <Route path='/verificacion-erronea' element={<VerificacionErronea/>}></Route>
+        <Route path='/prueba-firma' element={<HmacExample/>}></Route>
       </Route>
       <Route path="*" element={<h1 className="text-center mt-5">404 – Esta no es la pagina que estas buscando</h1>} />
     </Routes>

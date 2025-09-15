@@ -15,7 +15,9 @@ export default function CapturaPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const sId = params.get('sessionId');
+    console.log('sessionId:', sId);
     setSessionId(sId);
+    
 
     let stream;
 
@@ -25,7 +27,9 @@ export default function CapturaPage() {
         return;
       }
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+  video: { facingMode: 'user' }
+});
         if (videoRef.current) {
           if (videoRef.current.srcObject !== stream) {
             videoRef.current.srcObject = stream;

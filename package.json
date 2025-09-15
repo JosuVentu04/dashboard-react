@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^14.4.3",
     "axios": "^1.11.0",
     "bootstrap": "^5.3.7",
+    "crypto-js": "^4.2.0",
     "ngrok": "^5.0.0-beta.2",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
