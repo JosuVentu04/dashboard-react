@@ -41,6 +41,7 @@ export default function QRPage() {
 
       {sessionId && (
         <button
+          className='boton-escanear-qr'
           onClick={handleStartPolling}
           style={{ fontSize: 16, padding: '10px 30px' }}
         >

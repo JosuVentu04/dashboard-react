@@ -24,6 +24,7 @@ import VerificacionCompletada from './componentes/verificacion/VerificacionCompl
 import VerificacionErronea from './componentes/verificacion/VerificacionErronea';
 import HistorialVerificaciones from './componentes/Gerente/HistorialVerificaciones';
 import HmacExample from './componentes/pruebas/PruebaFirma';
+import FirmarContrato from './componentes/contrato/FirmarContraro';
 
 
 export default function Rutas() {
@@ -60,6 +61,7 @@ export default function Rutas() {
         <Route path="/verificacion-completa" element={<VerificacionCompletada/>}></Route>
         <Route path='/verificacion-erronea' element={<VerificacionErronea/>}></Route>
         <Route path='/prueba-firma' element={<HmacExample/>}></Route>
+        <Route path='/firmar-contrato' element={<FirmarContrato/>}></Route>
       </Route>
       <Route path="*" element={<h1 className="text-center mt-5">404 – Esta no es la pagina que estas buscando</h1>} />
     </Routes>

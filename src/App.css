@@ -309,7 +309,8 @@
 .btn-registro,
 .btn-editar-nombre,
 .btn-solicitar-nuevo-correo,
-.btn-editar-perfil {
+.btn-editar-perfil,
+.btn-subir-sesion {
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
@@ -323,7 +324,8 @@
 .opcion-sucursales:hover,
 .btn-editar-nombre:hover,
 .btn-solicitar-nuevo-correo:hover,
-.btn-editar-perfil:hover {
+.btn-editar-perfil:hover,
+.btn-subir-sesion:hover {
   background-color: #014886 !important;
   border: 2px solid #014886 !important;
   color: white !important;
@@ -335,7 +337,8 @@
 .opcion-sucursales:active,
 .btn-editar-nombre:active,
 .btn-solicitar-nuevo-correo:active,
-.btn-editar-perfil:active {
+.btn-editar-perfil:active,
+.btn-subir-sesion:active {
   background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
   color: white !important;
@@ -604,8 +607,9 @@
   color: black !important;
 }
 
-.botones-control-admin-modificar {
-  min-width: 120px; 
+.botones-control-admin-modificar,
+.boton-escanear-qr {
+  min-width: 120px;
   margin-right: 10px !important;
   padding-left: 15px !important;
   padding-right: 15px !important;
@@ -616,6 +620,7 @@
   border-radius: 5px;
   color: white !important;
 }
+
 .botones-control-admin-deshabilitar:hover {
   min-width: 120px;
   margin-right: 10px !important;
@@ -629,7 +634,8 @@
   color: white !important;
 }
 
-.botones-control-admin-modificar:hover {
+.botones-control-admin-modificar:hover,
+.boton-escanear-qr:hover {
   min-width: 120px;
   margin-right: 10px !important;
   padding-left: 15px !important;
@@ -641,6 +647,7 @@
   border-radius: 5px;
   color: white !important;
 }
+
 .botones-control-admin-deshabilitar:active {
   min-width: 120px;
   margin-right: 10px !important;
@@ -654,7 +661,8 @@
   color: white !important;
 }
 
-.botones-control-admin-modificar:active {
+.botones-control-admin-modificar:active,
+.boton-escanear-qr:active {
   min-width: 120px;
   margin-right: 10px !important;
   padding-left: 15px !important;
@@ -665,4 +673,16 @@
   border: 2px solid #012f5a !important;
   border-radius: 5px;
   color: white !important;
+}
+
+.formulario-registo-usuario {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10%;
+}
+.logo-crear-sesion {
+  width: 50%;
+  position: relative;
 }
