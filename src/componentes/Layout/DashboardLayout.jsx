@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
-import Menu from '../ui/Menu';
+
 
 export default function DashboardLayout() {
   return (
@@ -10,7 +10,6 @@ export default function DashboardLayout() {
       <Navbar />
 
       {/* Offcanvas menu (puede estar fijo o activado por botón) */}
-      <Menu />
 
       {/* Main content area grows to fill space */}
       <main className="flex-grow-1 main-content">

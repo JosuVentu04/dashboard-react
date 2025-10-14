@@ -71,7 +71,20 @@ export default function Navbar({ onLogout }) {
               <a className="nav-link" href="#">Soporte</a>
             </li>
             <li className="nav-item">
+              <Link to="/" className="nav-link">Inicio</Link>
+            </li>
+            <li className="nav-item">
               <Link to="/catalogo" className="nav-link">Catalogo</Link>
+            </li>
+                        <li className='nav-item dropdown'>
+              <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Acciones
+              </a>
+              <ul className="dropdown-menu">
+                <li><a className="dropdown-item" href="/retomar-verificacion">Retomar Verificacion</a></li>  
+                <li><a className="dropdown-item" href="#">Verificar Identidad</a></li>
+                <li><a className="dropdown-item" href="#">Historial de Consultas</a></li>
+              </ul>
             </li>
             {user && ["GERENTE", "ADMIN", "SOPORTE"].includes((user.rol || "").toUpperCase()) && (
               <li className="nav-item dropdown">
@@ -104,6 +117,7 @@ export default function Navbar({ onLogout }) {
                   )}
                 </ul>
               </li>
+              
             )}
           </ul>
 

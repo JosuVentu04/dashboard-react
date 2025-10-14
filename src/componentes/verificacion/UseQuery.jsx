@@ -13,6 +13,7 @@ export default function QRPage() {
   // URL personalizada para captura manual (ajusta dominio y path reales)
   const capturaUrl = sessionId ? `http://localhost:3000/captura?sessionId=${sessionId}` : null;
   const navigate = useNavigate();
+  localStorage.setItem('sessionIdActual', sessionId);
 
   const handleStartPolling = () => {
     if (sessionId) {
@@ -26,7 +27,9 @@ export default function QRPage() {
       {veriffUrl && (
         <div style={{ marginBottom: 40 }}>
           <h3>Escanea el QR oficial de Veriff</h3>
-          <QRCode value={veriffUrl} size={180} />
+          <a href={veriffUrl} target="_blank" rel="noopener noreferrer">
+            <QRCode value={veriffUrl} size={180} />
+          </a>
           <p style={{ fontSize: 12, color: '#666', wordBreak: 'break-word' }}>{veriffUrl}</p>
         </div>
       )}
@@ -34,7 +37,9 @@ export default function QRPage() {
       {capturaUrl && (
         <div style={{ marginBottom: 40 }}>
           <h3>Escanea el QR para tomar fotos desde otro dispositivo</h3>
-          <QRCode value={capturaUrl} size={180} />
+          <a href={capturaUrl} target="_blank" rel="noopener noreferrer">
+            <QRCode value={capturaUrl} size={180} />
+          </a>
           <p style={{ fontSize: 12, color: '#666', wordBreak: 'break-word' }}>{capturaUrl}</p>
         </div>
       )}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contrato de Autorización para Consulta de Historial Crediticio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #0055aa;
+    }
+    .firma {
+      margin-top: 60px;
+      border-top: 1px solid #777;
+      width: 300px;
+      text-align: center;
+      font-style: italic;
+      color: #555;
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Contrato de Autorización</h1>
+  <p>Yo, <strong>{{nombre_cliente}} {{apellido}}</strong>, con identificación número <strong>{{identificacion}}</strong>, autorizo a <strong>Comunicaciones y Operaciones Marcel S.A. de C.V.</strong> a consultar mi historial crediticio y demás datos financieros que sean necesarios para evaluar mi capacidad crediticia.</p>
+  
+  <p>Esta autorización es otorgada con el fin de facilitar la evaluación para la prestación de servicios financieros.</p>
+  
+  <p>Fecha de autorización: <strong>{{fecha}}</strong></p>
+
+  <div class="firma">
+    ______________________ <br />
+    Firma de {{nombre_cliente}}
+  </div>
+</body>
+</html>

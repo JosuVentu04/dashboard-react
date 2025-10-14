@@ -437,7 +437,8 @@
   height: 100%;
 }
 
-.boton-opcion-sucursales {
+.boton-opcion-sucursales,
+.boton-enviar-fotos {
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
@@ -448,7 +449,8 @@
   margin: 3px;
 }
 
-.boton-opcion-sucursales:hover {
+.boton-opcion-sucursales:hover,
+.boton-enviar-fotos:hover {
   background-color: #014886 !important;
   border: 2px solid #014886 !important;
   color: white !important;
@@ -459,7 +461,8 @@
   margin: 3px;
 }
 
-.boton-opcion-sucursales:active {
+.boton-opcion-sucursales:active,
+.boton-enviar-fotos:active {
   background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
   color: white !important;
@@ -470,7 +473,8 @@
   margin: 3px;
 }
 
-.informacion-sucursal {
+.informacion-sucursal,
+.boton-enviar-fotos {
   background: #b7bdc1;
   border-width: 2px;
   border-radius: 5px;
@@ -494,7 +498,7 @@
 }
 
 .catalogo-sucursal,
-.catalogo-informacion {
+.catalogo-informacion{
   width: 47%;
   height: 40px;
   background: #014886 !important;
@@ -524,7 +528,7 @@
 }
 
 .boton-volver-catalogo,
-.boton-volver-incio {
+.boton-volver-incio{
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
@@ -533,14 +537,14 @@
   padding: 5px;
 }
 
-.boton-volver-catalogo:hover {
+.boton-volver-catalogo:hover{
   background-color: #014886 !important;
   border: 2px solid #014886 !important;
   color: white !important;
   border-radius: 5px;
 }
 
-.boton-volver-catalogo:active {
+.boton-volver-catalogo:active{
   background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
   color: white !important;
@@ -685,4 +689,75 @@
 .logo-crear-sesion {
   width: 50%;
   position: relative;
+}
+.boton-tomar-fotos {
+  background-color: #bdbdbd !important;
+  border: 2px solid #bdbdbd !important;
+  color: white !important;
+  border-radius: 5px;
+  color: black !important;
+  padding: 5px;
+}
+.boton-tomar-fotos:hover {
+  background-color: #014886 !important;
+  border: 2px solid #014886 !important;
+  color: white !important;
+  border-radius: 5px;
+  padding: 5px;
+}
+.boton-tomar-fotos:active {
+  background-color: #013d72 !important;
+  border: 2px solid #013d72 !important;
+  color: white !important;
+  border-radius: 5px;
+  padding: 5px;
+}
+.boton-fotos-tomadas {
+  background-color: #bdbdbd !important;
+  border: 2px solid #bdbdbd !important;
+  color: white !important;
+  border-radius: 5px;
+  color: gray !important;
+  padding: 5px;  
+}
+.retomar-verificacion {
+  border-radius: 3px;
+  justify-content: center;
+  display: flex;
+  margin-top: 15%;
+  padding: 20px;
+  font-size: large;
+  background-color: #b7bdc1;
+}
+.retomar-verificacion-button{
+  width: 30%;
+  height: 40px;
+  background: #014886 !important;
+  color: white !important;
+  border-radius: 5px;
+  margin: 5px;
+} 
+.retomar-verificacion-button:hover {
+  width: 30%;
+  height: 40px;
+  background: #023f75 !important;
+  color: white !important;
+  border-radius: 5px;
+  margin: 5px;
+} 
+.retomar-verificacion-button:active {
+  width: 30%;
+  height: 40px;
+  background: #012f5a !important;
+  color: white !important;
+  border-radius: 5px;
+  margin: 5px;
+}
+.crear-contrato-componente {
+  background: #b7bdc1;
+  border-radius: 5px;
+  height: auto;
+  padding: 20px;
+  font-size: large;
+  margin-top: 10%;
 }

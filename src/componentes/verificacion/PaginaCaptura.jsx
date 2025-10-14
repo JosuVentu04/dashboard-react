@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -8,6 +9,15 @@ export default function CapturaPage() {
   const [fotos, setFotos] = useState({ cara: null, idFrontal: null, idTrasera: null });
   const [mensaje, setMensaje] = useState('');
   const [subiendo, setSubiendo] = useState(false);
+  const [enviado, setEnviado] = useState(false);
+  const navigate = useNavigate();
+
+  const handleStartPolling = () => {
+    if (sessionId) {
+      navigate(`/polling?sessionId=${sessionId}`);
+    }
+  };
+
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -28,8 +38,8 @@ export default function CapturaPage() {
       }
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-  video: { facingMode: 'user' }
-});
+          video: { facingMode: 'user' }
+        });
         if (videoRef.current) {
           if (videoRef.current.srcObject !== stream) {
             videoRef.current.srcObject = stream;
@@ -104,7 +114,7 @@ export default function CapturaPage() {
       const errorData = await res.json();
       throw new Error(errorData.error || 'Error subiendo foto');
     }
-  }
+  } 
 
   async function enviarSesion() {
     if (!sessionId) {
@@ -126,11 +136,13 @@ export default function CapturaPage() {
     setSubiendo(true);
     setMensaje('');
     try {
+      
       await subirFoto('selfie', fotos.cara);
       await subirFoto('front', fotos.idFrontal);
       await subirFoto('back', fotos.idTrasera);
       await enviarSesion();
       setMensaje('Fotos y sesión enviadas correctamente');
+      setEnviado(true);  
       setStep(0);
       setFotos({ cara: null, idFrontal: null, idTrasera: null });
     } catch (error) {
@@ -152,35 +164,43 @@ export default function CapturaPage() {
         {step > 2 && '¡Fotos listas!'}
       </p>
 
-      <video ref={videoRef} style={{ width: '100%', borderRadius: 8 }} autoPlay muted playsInline />
-
-      <button
-        onClick={tomarFoto}
-        disabled={subiendo || step > 2}
-        style={{ marginTop: 12, padding: '12px 20px', fontSize: 16 }}
-      >
-        {step <= 2 ? 'Tomar foto' : 'Fotos tomadas'}
-      </button>
-
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-      {step > 2 && (
-        <div style={{ marginTop: 20 }}>
-          <div>
-            <img src={fotos.cara} alt="Selfie" style={{ width: 120, marginRight: 8 }} />
-            <img src={fotos.idFrontal} alt="ID frontal" style={{ width: 120, marginRight: 8 }} />
-            <img src={fotos.idTrasera} alt="ID trasera" style={{ width: 120 }} />
-          </div>
-          <button
-            onClick={enviarFotos}
-            disabled={subiendo}
-            style={{ marginTop: 16, padding: '12px 25px', fontSize: 16 }}
-          >
-            {subiendo ? 'Enviando...' : 'Enviar Fotos y Sesión'}
-          </button>
+      {!enviado ? (
+  <>
+    <video ref={videoRef} style={{ width: '100%', borderRadius: 8 }} autoPlay muted playsInline />
+    <button
+      className= {step <= 2 ? 'boton-tomar-fotos' : 'boton-fotos-tomadas'}
+      onClick={tomarFoto}
+      disabled={subiendo || step > 2}
+      style={{ marginTop: 12, padding: '12px 20px', fontSize: 16 }}
+    >
+      {step <= 2 ? 'Tomar foto' : 'Fotos tomadas'}
+    </button>
+    <canvas ref={canvasRef} style={{ display: 'none' }} />
+    {step > 2 && (
+      <div style={{ marginTop: 20 }}>
+        <div>
+          <img src={fotos.cara} alt="Selfie" style={{ width: 120, marginRight: 8 }} />
+          <img src={fotos.idFrontal} alt="ID frontal" style={{ width: 120, marginRight: 8 }} />
+          <img src={fotos.idTrasera} alt="ID trasera" style={{ width: 120 }} />
         </div>
-      )}
-      {mensaje && <p style={{ marginTop: 15, color: subiendo ? 'gray' : 'red' }}>{mensaje}</p>}
+        <button
+          className='boton-enviar-fotos'
+          onClick={enviarFotos}
+          disabled={subiendo}
+          style={{ marginTop: 16, padding: '12px 25px', fontSize: 16 }}
+        >
+          {subiendo ? 'Enviando...' : 'Enviar Fotos y Sesión'}
+        </button>
+      </div>
+    )}
+  </>
+) : (
+  <div style={{ marginTop: 40 }}>
+    <h3>¡Fotos enviadas correctamente!</h3>
+    <p>Gracias por completar el proceso.</p>
+  </div>
+)}
+{mensaje && <p style={{ marginTop: 15, color: subiendo ? 'gray' : 'red' }}>{mensaje}</p>}
     </div>
   );
 }

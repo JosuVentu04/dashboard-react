@@ -16,7 +16,6 @@ import RegistrarModelo from './componentes/Admin/RegistrarModelo';
 import EditarModelo from './componentes/Admin/EditarModelo';
 import RegistrarGerente from './componentes/Admin/RegistrarGerente';
 import DeshabilitarEmpleado from './componentes/Admin/DeshabilitarEmpleado';
-import VeriffQR from './componentes/verificacion/verificacion';
 import QRPage from './componentes/verificacion/UseQuery';
 import VerificacionPollingWrapper from './componentes/verificacion/VerificacionPollingWrappe';
 import CapturaPage from './componentes/verificacion/PaginaCaptura';
@@ -25,6 +24,9 @@ import VerificacionErronea from './componentes/verificacion/VerificacionErronea'
 import HistorialVerificaciones from './componentes/Gerente/HistorialVerificaciones';
 import HmacExample from './componentes/pruebas/PruebaFirma';
 import FirmarContrato from './componentes/contrato/FirmarContraro';
+import RetomarVerificacion from './componentes/Acciones/RetomarVerificacion';
+import CrearContrato from './componentes/contrato/CrearContrato';
+import VerificarContrato from './componentes/contrato/VerificarContrato';
 
 
 export default function Rutas() {
@@ -54,7 +56,6 @@ export default function Rutas() {
         <Route path='/mi-perfil' element={<Perfil />}></Route>
         <Route path='/catalogo' element={<Catalogo />}></Route>
         <Route path="/catalogo/modelo/:id" element={<ModeloDetalle />} />
-        <Route path="/pruebaveriff" element={<VeriffQR/>}></Route>
         <Route path="/qr" element={<QRPage />} />
         <Route path="/captura" element={<CapturaPage />} />
         <Route path="/polling" element={<VerificacionPollingWrapper />} />
@@ -62,6 +63,9 @@ export default function Rutas() {
         <Route path='/verificacion-erronea' element={<VerificacionErronea/>}></Route>
         <Route path='/prueba-firma' element={<HmacExample/>}></Route>
         <Route path='/firmar-contrato' element={<FirmarContrato/>}></Route>
+        <Route path='/retomar-verificacion' element={<RetomarVerificacion/>}></Route>
+        <Route path='/crear-contrato' element={<CrearContrato/>}></Route>
+        <Route path="/verificar-contrato/:id" element={<VerificarContrato />} />
       </Route>
       <Route path="*" element={<h1 className="text-center mt-5">404 – Esta no es la pagina que estas buscando</h1>} />
     </Routes>

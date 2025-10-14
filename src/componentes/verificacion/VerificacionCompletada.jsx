@@ -10,6 +10,7 @@ export default function VerificacionCompletada() {
     const timer = setTimeout(() => {
       navigate('/firmar-contrato', { state: { nombre, apellido } });
     }, 3000);
+    console.log("Redirigiendo a crear contrato con:", { nombre, apellido });
 
     return () => clearTimeout(timer);
   }, [navigate, nombre, apellido]);
@@ -17,7 +18,7 @@ export default function VerificacionCompletada() {
   return (
     <div style={{ textAlign: 'center', marginTop: 40 }}>
       <h2>Verificación Completada</h2>
-      <p>Gracias por completar el proceso de verificación.</p>
+      <p>Gracias por completar el proceso de verificación.</p> 
       <p>Tu identidad ha sido verificada exitosamente.</p>
       <p>Serás redirigido al contrato para firmar con huella dactilar...</p>
     </div>

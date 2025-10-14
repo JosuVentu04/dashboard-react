@@ -23,8 +23,11 @@ export default function PaginaInicio() {
         customerLastName: apellido,
       });
       const originalUrl = response.data.verification.url;
+      localStorage.setItem('UrlActual', originalUrl);
       const sessionId = response.data.verification.id; // <-- aquí obtienes el sessionId
       setDatosUsuario({ nombre, apellido }); // Guardar datos en el contexto
+      const datos = { nombre, apellido };
+      localStorage.setItem('DatosEmpleado', JSON.stringify(user))
       // Acortar la URL
       const res = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(originalUrl)}`);
       const shortUrl = res.data;
