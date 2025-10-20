@@ -87,7 +87,7 @@ export default function EditarModelo() {
           "red_movil","version_android","procesador","velocidad_procesador","cantidad_nucleos",
           "tamanio_pantalla","tipo_resolucion","frecuencia_actualizacion_pantalla",
           "resolucion_camara_trasera_principal","resolucion_camara_frontal_principal",
-          "capacidad_bateria"
+          "capacidad_bateria", "precio"
         ].map((field) => (
           <div className="mb-2" key={field}>
             <label className="form-label">{field.replaceAll("_", " ")}</label>

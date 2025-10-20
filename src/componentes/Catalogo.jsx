@@ -176,9 +176,8 @@ export default function Catalogo() {
                     <p className="card-text">
                       <small className="descripcion-catalogo text-muted">{modelo.descripcion}</small>
                     </p>
-                    <div className="botones-catalogo">
+                    <div className="botones-catalogo text-center">
                       <Link to={`/catalogo/modelo/${modelo.id}`} className="btn catalogo-informacion">Saber mas</Link>
-                      <button className="btn catalogo-sucursal">Ver en sucursal</button>
                     </div>
                   </div>
                 </div>

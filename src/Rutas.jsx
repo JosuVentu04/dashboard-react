@@ -28,6 +28,7 @@ import RetomarVerificacion from './componentes/Acciones/RetomarVerificacion';
 import CrearContrato from './componentes/contrato/CrearContrato';
 import VerificarContrato from './componentes/contrato/VerificarContrato';
 import HistorialCrediticio from './componentes/HistorialCrediticio/HistorialCrediticio';
+import Planes from './componentes/HistorialCrediticio/Planes';
 
 
 export default function Rutas() {
@@ -68,6 +69,7 @@ export default function Rutas() {
         <Route path='/crear-contrato' element={<CrearContrato/>}></Route>
         <Route path="/verificar-contrato/:id" element={<VerificarContrato />} />
         <Route path="/historial-crediticio/:userId" element={<HistorialCrediticio/>}></Route>
+        <Route path="/planes" element={<Planes/>} />
       </Route>
       <Route path="*" element={<h1 className="text-center mt-5">404 – Esta no es la pagina que estas buscando</h1>} />
     </Routes>
