@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Lector FIDO2</title>
+</head>
+<body>
+  <h1>Prueba de lector FIDO2 / Huella</h1>
+  <button id="btn">Probar lector / autenticador</button>
+
+  <script>
+    document.getElementById("btn").addEventListener("click", async () => {
+      try {
+        // Challenge aleatorio para prueba local
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+
+        // Verifica si el navegador soporta WebAuthn
+        if (!window.PublicKeyCredential) {
+          alert("Tu navegador no soporta WebAuthn.");
+          return;
+        }
+
+        const options = {
+          publicKey: {
+            challenge,
+            rp: { name: "Demo Test Lector" },
+            user: {
+              id: new Uint8Array(16),
+              name: "usuario_prueba",
+              displayName: "Usuario Local",
+            },
+            pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+            timeout: 60000,
+            attestation: "none",
+          },
+        };
+
+        // Inicia la solicitud de registro para comprobar el lector
+        const credential = await navigator.credentials.create(options);
+
+        console.log("Autenticador detectado:", credential);
+        alert("¡El lector o llave FIDO2 funciona correctamente!");
+      } catch (err) {
+        console.error("Error al acceder al lector:", err);
+        alert("Error: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
