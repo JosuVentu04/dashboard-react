@@ -1,4 +1,4 @@
-import { startRegistration, startAuthentication, base64URLStringToBuffer } from "@simplewebauthn/browser";
+import { startAuthentication } from '@simplewebauthn/browser';
 import { useState, useEffect, useRef } from 'react';
 import { useDatosUsuario } from '../../context/DatosUsuarioContext';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ export default function FirmarContrato() {
   const [firmado, setFirmado] = useState(false);
   const [alerta, setAlerta] = useState('');
   const [loading, setLoading] = useState(false);
-  const [registroCompleto, setRegistroCompleto] = useState(false);
   const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -19,145 +18,91 @@ export default function FirmarContrato() {
   const empleado = datosEmpleadoRaw ? JSON.parse(datosEmpleadoRaw) || {} : {};
   const fechaActual = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 
+  // 🧠 useEffect: crea el contrato automáticamente al cargar
   const contratoCreando = useRef(false);
 
-  // Crear contrato automáticamente (igual a antes)
   useEffect(() => {
-    const crearContrato = async () => {
-      if (contratoCreando.current) return;
-      contratoCreando.current = true;
+  const crearContrato = async () => {
+    // ✅ Verifica si ya hay un contrato guardado en localStorage
+    if (contratoCreando.current) return; // ❌ Ya hay uno en proceso
+    contratoCreando.current = true;
+    const contratoGuardado = localStorage.getItem('ContratoCreado');
+    if (contratoGuardado) {
+      setContrato(JSON.parse(contratoGuardado));
+      setAlerta('Contrato cargado desde almacenamiento local.');
+      return;
+    }
 
-      const contratoGuardado = localStorage.getItem('ContratoCreado');
-      if (contratoGuardado) {
-        setContrato(JSON.parse(contratoGuardado));
-        setAlerta('Contrato cargado desde almacenamiento local.');
-        return;
-      }
+    if (!cliente.id && !datosUsuario?.id) {
+      setAlerta('No se encontró un cliente válido.');
+      return;
+    }
 
-      if (!cliente.id && !datosUsuario?.id) {
-        setAlerta('No se encontró un cliente válido.');
-        return;
-      }
-
-      setLoading(true);
-      setAlerta('Creando contrato automáticamente...');
-
-      try {
-        const body = {
-          cliente_id: cliente.id || datosUsuario?.id,
-          empleado_id: empleado.id || 1,
-          contrato_url: 'url_base_plantilla_o_dummy',
-          hash_contrato: 'hash_placeholder',
-          estado_contrato: 'PENDIENTE',
-          nombre: cliente.primer_nombre || datosUsuario?.primer_nombre || '',
-          apellido: cliente.apellido_paterno || datosUsuario?.apellido_paterno || '',
-        };
-
-        const res = await fetch(`${API_URL}/api/contratos/crear`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          setContrato(data.contrato);
-          setAlerta('Contrato creado automáticamente. Ahora puede ser firmado.');
-          localStorage.setItem('ContratoCreado', JSON.stringify(data.contrato));
-        } else {
-          setAlerta('Error al crear contrato: ' + (data.error || ''));
-        }
-      } catch (e) {
-        console.error(e);
-        setAlerta('Error en la creación del contrato: ' + e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    crearContrato();
-  }, []);
-
-  // --- Registro WebAuthn ---
-  const handleRegistroWebAuthn = async () => {
     setLoading(true);
-    setAlerta('');
+    setAlerta('Creando contrato automáticamente...');
 
     try {
-      // 1️⃣ Obtener opciones de registro
-      const resp = await fetch(`${API_URL}/api/webauthn/register-options`);
-      if (!resp.ok) throw new Error('No se pudieron obtener las opciones de registro.');
-      const options = await resp.json();
+      const body = {
+        cliente_id: cliente.id || datosUsuario?.id,
+        empleado_id: empleado.id || 1,
+        contrato_url: 'url_base_plantilla_o_dummy',
+        hash_contrato: 'hash_placeholder',
+        estado_contrato: 'PENDIENTE',
+        nombre: cliente.primer_nombre || datosUsuario?.primer_nombre || '',
+        apellido: cliente.apellido_paterno || datosUsuario?.apellido_paterno || '',
+      };
 
-      // 2️⃣ Ejecutar registro en dispositivo
-      const attResp = await startRegistration(options);
-
-      // 3️⃣ Enviar resultado para guardar en backend
-      const verifyResp = await fetch(`${API_URL}/api/webauthn/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(attResp),
+      const res = await fetch(`${API_URL}/api/contratos/crear`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       });
 
-      const result = await verifyResp.json();
-      if (result.success) {
-        setAlerta('Registro WebAuthn completado. Puede proceder a firmar.');
-        setRegistroCompleto(true);
+      const data = await res.json();
+      if (res.ok) {
+        setContrato(data.contrato);
+        setAlerta('Contrato creado automáticamente. Ahora puede ser firmado.');
+        // ✅ Guardar en localStorage
+        localStorage.setItem('ContratoCreado', JSON.stringify(data.contrato));
       } else {
-        setAlerta('Error en registro: ' + (result.error || ''));
+        setAlerta('Error al crear contrato: ' + (data.error || ''));
       }
     } catch (e) {
       console.error(e);
-      setAlerta('Error durante el registro WebAuthn: ' + e.message);
+      setAlerta('Error en la creación del contrato: ' + e.message);
     } finally {
       setLoading(false);
     }
   };
 
+  crearContrato();
+}, []); // ← solo una vez
 
-  // --- Firma con huella / llave (WebAuthn FIDO2) ---
-  const handleFirmaWebAuthn = async () => {
+  // --- Función de firma biométrica (se mantiene igual) ---
+  const handleFirmaHuella = async () => {
     if (!contrato) {
       setAlerta('Aún no se ha creado el contrato.');
       return;
     }
-    if (!registroCompleto) {
-      setAlerta('Debe registrar su dispositivo de autenticación primero.');
-      return;
-    }
-
     setLoading(true);
     setAlerta('');
 
     try {
-      // 1️⃣ Obtener opciones de autenticación del backend
-      const resp = await fetch(`${API_URL}/api/webauthn/auth-options`);
+      const resp = await fetch(`${API_URL}/api/webauthn/options`);
       if (!resp.ok) throw new Error('No se pudieron obtener las opciones de autenticación.');
       const options = await resp.json();
 
-      // 2️⃣ Convertir challenge y allowCredentials a ArrayBuffer
-      options.challenge = base64URLStringToBuffer(options.challenge);
-      if (options.allowCredentials) {
-        options.allowCredentials = options.allowCredentials.map(cred => ({
-          ...cred,
-          id: base64URLStringToBuffer(cred.id)
-        }));
-      }
-
-      // 3️⃣ Ejecutar autenticación en el dispositivo
       const authResp = await startAuthentication(options);
-
-      // 4️⃣ Verificar en backend
       const verifyResp = await fetch(`${API_URL}/api/webauthn/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(authResp),
       });
-
       const result = await verifyResp.json();
+
       if (result.success) {
         setFirmado(true);
-        setAlerta('¡Contrato firmado con éxito!');
+        setAlerta('¡Contrato firmado con huella!');
 
         const contratoHTML = document.getElementById('contrato').outerHTML;
         const body = {
@@ -171,7 +116,6 @@ export default function FirmarContrato() {
           hash_contrato: 'hash_firma_placeholder',
         };
 
-        // Guardar contrato firmado en DB
         const saveResp = await fetch(`${API_URL}/api/contratos/firmar-contrato`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -181,18 +125,19 @@ export default function FirmarContrato() {
         const saveResult = await saveResp.json();
         if (saveResult.success) {
           setContrato(saveResult.contrato);
+          setAlerta('Contrato guardado correctamente en la base de datos.');
           setTimeout(() => {
             navigate(`/verificar-contrato/${saveResult.contrato.id}`);
           }, 1500);
-        } else {
+          } else {
           setAlerta('Error al guardar el contrato: ' + (saveResult.message || ''));
         }
       } else {
-        setAlerta('Firma fallida: ' + (result.error || ''));
+        setAlerta('Firma fallida.');
       }
     } catch (e) {
       console.error(e);
-      setAlerta('Error durante la firma WebAuthn: ' + e.message);
+      setAlerta('No se pudo realizar la verificación biométrica: ' + e.message);
     } finally {
       setLoading(false);
     }
@@ -201,7 +146,7 @@ export default function FirmarContrato() {
   return (
     <div style={{ textAlign: 'center', marginTop: 40, maxWidth: 700, marginInline: 'auto' }}>
       <h2>Firmar Contrato</h2>
-      <p>El contrato se genera automáticamente al cargar la página. Luego puedes firmarlo con tu huella o llave Kensington.</p>
+      <p>El contrato se genera automáticamente al cargar la página. Luego puedes firmarlo con tu huella dactilar.</p>
 
       <div id="contrato" style={{ margin: '40px auto', maxWidth: '600px', border: '1px solid #ccc', borderRadius: '10px', padding: '32px', background: '#f8f8f8', textAlign: 'left' }}>
         <h3 style={{ textAlign: 'center' }}>Contrato de Servicios</h3>
@@ -215,24 +160,42 @@ export default function FirmarContrato() {
           <li>{fechaActual}</li>
           <li>Condiciones: Los servicios se prestarán conforme a los lineamientos establecidos en este documento.</li>
         </ul>
-        <p>Firmado digitalmente mediante autenticación WebAuthn/FIDO2.</p>
+        <p>Firmado digitalmente por el cliente mediante autenticación biométrica WebAuthn/FIDO2.</p>
         <div style={{ marginTop: 60 }}>
-          <button onClick={handleRegistroWebAuthn} disabled={loading} style={{ marginRight: 20 }}>
-            {loading ? 'Registrando...' : registroCompleto ? 'Registrado' : 'Registrar dispositivo'}
-          </button>
-          {contrato && !firmado && (
-            <button onClick={handleFirmaWebAuthn} disabled={loading}>
-              {loading ? 'Firmando...' : 'Firmar con huella / llave'}
-            </button>
-          )}
+          <span>______________________</span><br />
+          <span>Firma de {cliente.primer_nombre || datosUsuario?.primer_nombre || ''} {cliente.apellido_paterno || datosUsuario?.apellido_paterno || ''}</span>
         </div>
       </div>
 
+      {contrato && !firmado && (
+        <button onClick={handleFirmaHuella} disabled={loading} style={{ marginTop: 24, padding: '8px 16px' }}>
+          {loading ? 'Firmando...' : 'Firmar con huella dactilar'}
+        </button>
+        
+      )}
+{contrato && !firmado && (
+  <button
+    onClick={() => {
+      setContrato({ ...contrato, estado_contrato: 'FIRMADO' });
+      setFirmado(true);
+      setAlerta('Contrato marcado como firmado (simulación).');
+      // Redirige automáticamente a la página de verificación
+      setTimeout(() => {
+        navigate(`/verificar-contrato/${contrato.id}`);
+      }, 1000);
+    }}
+    disabled={loading}
+    style={{ marginTop: 12, padding: '8px 16px', backgroundColor: '#ffa500', color: '#fff', border: 'none', borderRadius: 4 }}
+  >
+    Marcar como firmado (temporal)
+  </button>
+)}
       {alerta && <div style={{ marginTop: 18, color: firmado ? 'green' : 'red' }}>{alerta}</div>}
 
       <p style={{ marginTop: 14, fontSize: 13 }}>
-        (Funcionalidad activa si configuras el backend FIDO2 correctamente)
+        (Funcionalidad activa si configuras el backend WebAuthn correctamente)
       </p>
+      
     </div>
   );
 }

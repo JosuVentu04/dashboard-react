@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contrato de Compra Venta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .contract-container {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        p {
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .signature {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature div {
+            width: 40%;
+            text-align: center;
+            border-top: 1px solid #000;
+            padding-top: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="contract-container">
+        <h1>Contrato de Compra Venta</h1>
+        <p><strong>Fecha:</strong> {{ fecha_creacion }}</p>
+        <p><strong>Vendedor:</strong> Empresa XYZ</p>
+        <p><strong>Comprador:</strong> {{ nombre_comprador }} {{ apellido_comprador }}</p>
+        <p><strong>ID de Comprador:</strong> {{ numero_id_comprador }}</p>
+        <h2>Detalle del Dispositivo</h2>
+        <ul>
+            <li>Modelo: {{ modelo_dispositivo }}</li>
+            <li>IMEI: {{ imei_dispositivo }}</li>
+            <li>Precio total: ${{ precio_total }}</li>
+            <li>Pago inicial: ${{ pago_inicial }}</li>
+            <li>Pago semanal ({{ num_pagos_semanales }} semanas): ${{ pago_semanal }}</li>
+        </ul>
+        <p>El comprador se compromete a pagar según el calendario descrito arriba.</p>
+        <div class="signature">
+            <div>Firma del Vendedor</div>
+            <div>Firma del Comprador</div>
+        </div>
+    </div>
+</body>
+</html>
