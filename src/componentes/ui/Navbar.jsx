@@ -101,7 +101,6 @@ export default function Navbar({ onLogout }) {
                   <li className='text-center'> <strong>Gerencia</strong></li>
                   <li><a className="dropdown-item" href="#">Usuarios</a></li>
                   <li><a className='dropdown-item' href='/historial-verificaciones'>Historial de Verificaciones</a></li>
-                  <li><a className="dropdown-item" href="#">Empleados</a></li>
                   <li><a className="dropdown-item" href="#">Otras sucursales</a></li>
                   <li><a className="dropdown-item" href="/registro">Registrar Empleado</a></li>
                   <li><a className="dropdown-item" href="#">Registrar Dispositivos</a></li>

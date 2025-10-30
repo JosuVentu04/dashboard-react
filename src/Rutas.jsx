@@ -29,6 +29,7 @@ import CrearContrato from './componentes/contrato/CrearContrato';
 import VerificarContrato from './componentes/contrato/VerificarContrato';
 import HistorialCrediticio from './componentes/HistorialCrediticio/HistorialCrediticio';
 import Planes from './componentes/HistorialCrediticio/Planes';
+import FirmarContratoCompraVenta from './componentes/contrato/FirmarContratoCompraVenta';
 
 
 export default function Rutas() {
@@ -65,6 +66,7 @@ export default function Rutas() {
         <Route path='/verificacion-erronea' element={<VerificacionErronea/>}></Route>
         <Route path='/prueba-firma' element={<HmacExample/>}></Route>
         <Route path='/firmar-contrato' element={<FirmarContrato/>}></Route>
+        <Route path="/firmar-contrato/:id" element={<FirmarContratoCompraVenta />} />
         <Route path='/retomar-verificacion' element={<RetomarVerificacion/>}></Route>
         <Route path='/crear-contrato' element={<CrearContrato/>}></Route>
         <Route path="/verificar-contrato/:id" element={<VerificarContrato />} />

@@ -107,53 +107,65 @@ export default function VerificarContrato() {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: 50 }}>
-      <h2>Verificación de Contrato</h2>
-      <p>{estado}</p>
+  <div
+    className="d-flex flex-column justify-content-center align-items-center"
+    style={{ minHeight: '100vh', padding: '2rem' }}
+  >
+    <h2 className="text-center mb-4">Verificación de Contrato</h2>
 
-      {contrato && (
-        <div style={{ marginTop: 20 }}>
-          <p><strong>ID:</strong> {contrato.id}</p>
-          <p><strong>Cliente:</strong> {contrato.cliente_id}</p>
-          <p><strong>Estado:</strong> {contrato.estado_contrato}</p>
+    <p className="text-center">{estado}</p>
+
+    {contrato && (
+      <div className="mb-4 text-center">
+        <p><strong>ID:</strong> {contrato.id}</p>
+        <p><strong>Cliente:</strong> {contrato.cliente_id}</p>
+        <p><strong>Estado:</strong> {contrato.estado_contrato}</p>
+      </div>
+    )}
+
+    {mostrarFormulario && (
+      <form
+        onSubmit={handleSubmit}
+        className="w-100"
+        style={{ maxWidth: 500 }}
+      >
+        <h3 className="mb-3 text-center">Agregar Domicilio</h3>
+
+        {["direccion", "colonia", "ciudad", "estado", "codigo_postal"].map((field) => (
+          <div className="mb-3" key={field}>
+            <label className="form-label">{field.replaceAll("_", " ")}</label>
+            <input
+              type="text"
+              name={field}
+              value={formData[field] || ""}
+              onChange={handleChange}
+              className="form-control"
+              required
+              placeholder={`Ingrese ${field.replaceAll("_", " ")}`}
+            />
+          </div>
+        ))}
+
+        <div className="mb-3">
+          <label className="form-label">Tipo de domicilio</label>
+          <select
+            name="tipo_domicilio"
+            value={formData.tipo_domicilio || ""}
+            onChange={handleChange}
+            className="form-control"
+          >
+            <option value="">Seleccione</option>
+            <option value="personal">Personal</option>
+            <option value="trabajo">Trabajo</option>
+            <option value="otro">Otro</option>
+          </select>
         </div>
-      )}
 
-      {mostrarFormulario && (
-        <form onSubmit={handleSubmit} style={{ marginTop: 30, textAlign: 'left', maxWidth: 400, margin: '30px auto' }}>
-          <h3>Agregar Domicilio</h3>
-
-          <label>Dirección:
-            <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} required />
-          </label><br />
-
-          <label>Colonia:
-            <input type="text" name="colonia" value={formData.colonia} onChange={handleChange} required />
-          </label><br />
-
-          <label>Ciudad:
-            <input type="text" name="ciudad" value={formData.ciudad} onChange={handleChange} required />
-          </label><br />
-
-          <label>Estado:
-            <input type="text" name="estado" value={formData.estado} onChange={handleChange} required />
-          </label><br />
-
-          <label>Código Postal:
-            <input type="text" name="codigo_postal" value={formData.codigo_postal} onChange={handleChange} required />
-          </label><br />
-
-          <label>Tipo de domicilio:
-            <select name="tipo_domicilio" value={formData.tipo_domicilio} onChange={handleChange}>
-              <option value="personal">Personal</option>
-              <option value="trabajo">Trabajo</option>
-              <option value="otro">Otro</option>
-            </select>
-          </label><br /><br />
-
-          <button type="submit">Agregar Domicilio</button>
-        </form>
-      )}
-    </div>
-  );
+        <button className="btn-agregar-domicilio btn btn-primary w-100" type="submit">
+          Agregar Domicilio
+        </button>
+      </form>
+    )}
+  </div>
+);
 }

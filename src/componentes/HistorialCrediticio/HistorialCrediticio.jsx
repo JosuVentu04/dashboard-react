@@ -204,6 +204,7 @@ export default function HistorialCrediticio() {
     <p>Precio: ${modeloSeleccionado.precio}</p>
 
     <button
+      className='btn-selector-plan'
       onClick={() => {
         const score = historial?.resultado?.scores?.find(s => s.nombreScore === "FICO")?.valor || 0;
         const esScoreBueno = score >= 600; // Puedes ajustar el umbral según tu criterio

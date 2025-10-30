@@ -310,7 +310,9 @@
 .btn-editar-nombre,
 .btn-solicitar-nuevo-correo,
 .btn-editar-perfil,
-.btn-subir-sesion {
+.btn-subir-sesion,
+.btn-agregar-domicilio,
+.btn-confirmar-plan {
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
@@ -325,7 +327,9 @@
 .btn-editar-nombre:hover,
 .btn-solicitar-nuevo-correo:hover,
 .btn-editar-perfil:hover,
-.btn-subir-sesion:hover {
+.btn-subir-sesion:hover,
+.btn-agregar-domicilio:hover,
+.btn-confirmar-plan:hover {
   background-color: #014886 !important;
   border: 2px solid #014886 !important;
   color: white !important;
@@ -338,7 +342,9 @@
 .btn-editar-nombre:active,
 .btn-solicitar-nuevo-correo:active,
 .btn-editar-perfil:active,
-.btn-subir-sesion:active {
+.btn-subir-sesion:active,
+.btn-agregar-domicilio:active,
+.btn-confirmar-plan:active {
   background-color: #012f5a !important;
   border: 2px solid #012f5a !important;
   color: white !important;
@@ -690,7 +696,7 @@
   width: 50%;
   position: relative;
 }
-.boton-tomar-fotos {
+.boton-tomar-fotos{
   background-color: #bdbdbd !important;
   border: 2px solid #bdbdbd !important;
   color: white !important;
@@ -698,14 +704,14 @@
   color: black !important;
   padding: 5px;
 }
-.boton-tomar-fotos:hover {
+.boton-tomar-fotos:hover{
   background-color: #014886 !important;
   border: 2px solid #014886 !important;
   color: white !important;
   border-radius: 5px;
   padding: 5px;
 }
-.boton-tomar-fotos:active {
+.boton-tomar-fotos:active{
   background-color: #013d72 !important;
   border: 2px solid #013d72 !important;
   color: white !important;
@@ -720,7 +726,7 @@
   color: gray !important;
   padding: 5px;  
 }
-.retomar-verificacion {
+.retomar-verificacion{
   border-radius: 3px;
   justify-content: center;
   display: flex;
@@ -737,7 +743,7 @@
   border-radius: 5px;
   margin: 5px;
 } 
-.retomar-verificacion-button:hover {
+.retomar-verificacion-button:hover{
   width: 30%;
   height: 40px;
   background: #023f75 !important;
@@ -760,4 +766,25 @@
   padding: 20px;
   font-size: large;
   margin-top: 10%;
+}
+.btn-selector-plan {
+  background-color: #014886 !important;
+  border: 2px solid #014886 !important;
+  color: white !important;
+  border-radius: 5px;
+  padding: 5px;
+}
+.btn-selector-plan:hover {
+  background-color: #023f75 !important;
+  border: 2px solid #023f75 !important;
+  color: white !important;
+  border-radius: 5px;
+  padding: 5px;
+}
+.btn-selector-plan:active {
+  background-color: #012f5a !important;
+  border: 2px solid #012f5a !important;
+  color: white !important;
+  border-radius: 5px;
+  padding: 5px;
 }
