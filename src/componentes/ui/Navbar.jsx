@@ -103,7 +103,6 @@ export default function Navbar({ onLogout }) {
                   <li><a className='dropdown-item' href='/historial-verificaciones'>Historial de Verificaciones</a></li>
                   <li><a className="dropdown-item" href="#">Otras sucursales</a></li>
                   <li><a className="dropdown-item" href="/registro">Registrar Empleado</a></li>
-                  <li><a className="dropdown-item" href="#">Registrar Dispositivos</a></li>
                   {["ADMIN"].includes((user.rol || "").toUpperCase()) && (
                     <>
                       <li className='text-center'> <strong>Administracion</strong></li>

@@ -169,6 +169,7 @@ export default function Catalogo() {
                       {modelo.marca} {modelo.modelo}
                     </h5>
                     <p className="card-text">
+                      <strong>Precio:</strong> {modelo.precio} MXN <br />
                       <strong>Almacenamiento:</strong> {modelo.almacenamiento} <br />
                       <strong>RAM:</strong> {modelo.ram} <br />
                       <strong>Año:</strong> {modelo.anio}

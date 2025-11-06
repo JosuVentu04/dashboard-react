@@ -107,6 +107,9 @@ export default function ModeloDetalle() {
               <strong>Almacenamiento:</strong> {modelo.almacenamiento}
             </li>
             <li className="list-group-item">
+              <strong>Precio:</strong> {modelo.precio} MXN
+            </li>
+            <li className="list-group-item">
               <strong>RAM:</strong> {modelo.ram}
             </li>
             <li className="list-group-item">

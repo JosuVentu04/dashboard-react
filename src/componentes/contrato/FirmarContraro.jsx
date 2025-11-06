@@ -18,67 +18,102 @@ export default function FirmarContrato() {
   const empleado = datosEmpleadoRaw ? JSON.parse(datosEmpleadoRaw) || {} : {};
   const fechaActual = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  // 🧠 useEffect: crea el contrato automáticamente al cargar
   const contratoCreando = useRef(false);
 
   useEffect(() => {
-  const crearContrato = async () => {
-    // ✅ Verifica si ya hay un contrato guardado en localStorage
-    if (contratoCreando.current) return; // ❌ Ya hay uno en proceso
-    contratoCreando.current = true;
-    const contratoGuardado = localStorage.getItem('ContratoCreado');
-    if (contratoGuardado) {
-      setContrato(JSON.parse(contratoGuardado));
-      setAlerta('Contrato cargado desde almacenamiento local.');
-      return;
-    }
-
-    if (!cliente.id && !datosUsuario?.id) {
-      setAlerta('No se encontró un cliente válido.');
-      return;
-    }
-
-    setLoading(true);
-    setAlerta('Creando contrato automáticamente...');
-
-    try {
-      const body = {
-        cliente_id: cliente.id || datosUsuario?.id,
-        empleado_id: empleado.id || 1,
-        contrato_url: 'url_base_plantilla_o_dummy',
-        hash_contrato: 'hash_placeholder',
-        estado_contrato: 'PENDIENTE',
-        nombre: cliente.primer_nombre || datosUsuario?.primer_nombre || '',
-        apellido: cliente.apellido_paterno || datosUsuario?.apellido_paterno || '',
-      };
-
-      const res = await fetch(`${API_URL}/api/contratos/crear`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setContrato(data.contrato);
-        setAlerta('Contrato creado automáticamente. Ahora puede ser firmado.');
-        // ✅ Guardar en localStorage
-        localStorage.setItem('ContratoCreado', JSON.stringify(data.contrato));
-      } else {
-        setAlerta('Error al crear contrato: ' + (data.error || ''));
+    const crearContrato = async () => {
+      if (contratoCreando.current) return;
+      contratoCreando.current = true;
+      const contratoGuardado = localStorage.getItem('ContratoCreado');
+      if (contratoGuardado) {
+        setContrato(JSON.parse(contratoGuardado));
+        setAlerta('Contrato cargado desde almacenamiento local.');
+        return;
       }
-    } catch (e) {
-      console.error(e);
-      setAlerta('Error en la creación del contrato: ' + e.message);
-    } finally {
-      setLoading(false);
+
+      if (!cliente.id && !datosUsuario?.id) {
+        setAlerta('No se encontró un cliente válido.');
+        return;
+      }
+
+      setLoading(true);
+      setAlerta('Creando contrato automáticamente...');
+
+      try {
+        const body = {
+          cliente_id: cliente.id || datosUsuario?.id,
+          empleado_id: empleado.id || 1,
+          contrato_url: 'url_base_plantilla_o_dummy',
+          hash_contrato: 'hash_placeholder',
+          estado_contrato: 'PENDIENTE',
+          nombre: cliente.primer_nombre || datosUsuario?.primer_nombre || '',
+          apellido: cliente.apellido_paterno || datosUsuario?.apellido_paterno || '',
+        };
+
+        const res = await fetch(`${API_URL}/api/contratos/crear`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setContrato(data.contrato);
+          setAlerta('Contrato creado automáticamente. Ahora puede ser firmado.');
+          localStorage.setItem('ContratoCreado', JSON.stringify(data.contrato));
+        } else {
+          setAlerta('Error al crear contrato: ' + (data.error || ''));
+        }
+      } catch (e) {
+        console.error(e);
+        setAlerta('Error en la creación del contrato: ' + e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    crearContrato();
+  }, []);
+
+  // ✅ Función hash
+  async function generarHashContrato(texto) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(texto);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // ✅ Función genérica para enviar el contrato al backend (se usa en ambos flujos)
+  async function guardarContratoFirmado(contrato, cliente, datosUsuario, contratoHTML, hash) {
+    const body = {
+      contrato_id: contrato.id,
+      cliente_id: cliente.id || datosUsuario?.id,
+      nombre: cliente.primer_nombre || datosUsuario?.primer_nombre || '',
+      apellido: cliente.apellido_paterno || datosUsuario?.apellido_paterno || '',
+      fecha_firma: new Date().toISOString(),
+      estado_contrato: 'FIRMADO',
+      contrato_html: contratoHTML,
+      hash_contrato: hash,
+    };
+
+    const saveResp = await fetch(`${API_URL}/api/contratos/firmar-contrato`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const saveResult = await saveResp.json();
+    if (saveResult.success) {
+      setContrato(saveResult.contrato);
+      setAlerta('Contrato guardado correctamente en la base de datos.');
+      setTimeout(() => navigate(`/verificar-contrato/${saveResult.contrato.id}`), 1500);
+    } else {
+      setAlerta('Error al guardar el contrato: ' + (saveResult.message || ''));
     }
-  };
+  }
 
-  crearContrato();
-}, []); // ← solo una vez
-
-  // --- Función de firma biométrica (se mantiene igual) ---
+  // --- Firma biométrica ---
   const handleFirmaHuella = async () => {
     if (!contrato) {
       setAlerta('Aún no se ha creado el contrato.');
@@ -103,35 +138,9 @@ export default function FirmarContrato() {
       if (result.success) {
         setFirmado(true);
         setAlerta('¡Contrato firmado con huella!');
-
         const contratoHTML = document.getElementById('contrato').outerHTML;
-        const body = {
-          contrato_id: contrato.id,
-          cliente_id: cliente.id || datosUsuario?.id,
-          nombre: cliente.primer_nombre || datosUsuario?.primer_nombre || '',
-          apellido: cliente.apellido_paterno || datosUsuario?.apellido_paterno || '',
-          fecha_firma: new Date().toISOString(),
-          estado_contrato: 'FIRMADO',
-          contrato_html: contratoHTML,
-          hash_contrato: 'hash_firma_placeholder',
-        };
-
-        const saveResp = await fetch(`${API_URL}/api/contratos/firmar-contrato`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-
-        const saveResult = await saveResp.json();
-        if (saveResult.success) {
-          setContrato(saveResult.contrato);
-          setAlerta('Contrato guardado correctamente en la base de datos.');
-          setTimeout(() => {
-            navigate(`/verificar-contrato/${saveResult.contrato.id}`);
-          }, 1500);
-          } else {
-          setAlerta('Error al guardar el contrato: ' + (saveResult.message || ''));
-        }
+        const hash = await generarHashContrato(contratoHTML);
+        await guardarContratoFirmado(contrato, cliente, datosUsuario, contratoHTML, hash);
       } else {
         setAlerta('Firma fallida.');
       }
@@ -143,16 +152,52 @@ export default function FirmarContrato() {
     }
   };
 
+  // ✅ Botón temporal que también genera hash y guarda
+  const handleFirmaTemporal = async () => {
+    if (!contrato) {
+      setAlerta('Aún no se ha creado el contrato.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const contratoHTML = document.getElementById('contrato').outerHTML;
+      const hash = await generarHashContrato(contratoHTML);
+      setFirmado(true);
+      setAlerta('Contrato marcado como firmado (temporal).');
+      await guardarContratoFirmado(contrato, cliente, datosUsuario, contratoHTML, hash);
+    } catch (e) {
+      console.error(e);
+      setAlerta('Error al firmar contrato temporalmente: ' + e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{ textAlign: 'center', marginTop: 40, maxWidth: 700, marginInline: 'auto' }}>
       <h2>Firmar Contrato</h2>
       <p>El contrato se genera automáticamente al cargar la página. Luego puedes firmarlo con tu huella dactilar.</p>
 
-      <div id="contrato" style={{ margin: '40px auto', maxWidth: '600px', border: '1px solid #ccc', borderRadius: '10px', padding: '32px', background: '#f8f8f8', textAlign: 'left' }}>
+      <div
+        id="contrato"
+        style={{
+          margin: '40px auto',
+          maxWidth: '600px',
+          border: '1px solid #ccc',
+          borderRadius: '10px',
+          padding: '32px',
+          background: '#f8f8f8',
+          textAlign: 'left',
+        }}
+      >
         <h3 style={{ textAlign: 'center' }}>Contrato de Servicios</h3>
         <p>
           Entre <strong>Empresa Demo S.A. de C.V.</strong> y el cliente{' '}
-          <strong>{cliente.primer_nombre || datosUsuario?.primer_nombre || ''} {cliente.apellido_paterno || datosUsuario?.apellido_paterno || ''}</strong>, se acuerda lo siguiente:
+          <strong>
+            {cliente.primer_nombre || datosUsuario?.primer_nombre || ''} {cliente.apellido_paterno || datosUsuario?.apellido_paterno || ''}
+          </strong>
+          , se acuerda lo siguiente:
         </p>
         <ul>
           <li>Duración: 12 meses</li>
@@ -162,40 +207,41 @@ export default function FirmarContrato() {
         </ul>
         <p>Firmado digitalmente por el cliente mediante autenticación biométrica WebAuthn/FIDO2.</p>
         <div style={{ marginTop: 60 }}>
-          <span>______________________</span><br />
-          <span>Firma de {cliente.primer_nombre || datosUsuario?.primer_nombre || ''} {cliente.apellido_paterno || datosUsuario?.apellido_paterno || ''}</span>
+          <span>______________________</span>
+          <br />
+          <span>
+            Firma de {cliente.primer_nombre || datosUsuario?.primer_nombre || ''}{' '}
+            {cliente.apellido_paterno || datosUsuario?.apellido_paterno || ''}
+          </span>
         </div>
       </div>
 
       {contrato && !firmado && (
-        <button onClick={handleFirmaHuella} disabled={loading} style={{ marginTop: 24, padding: '8px 16px' }}>
-          {loading ? 'Firmando...' : 'Firmar con huella dactilar'}
-        </button>
-        
+        <>
+          <button onClick={handleFirmaHuella} disabled={loading} style={{ marginTop: 24, padding: '8px 16px' }}>
+            {loading ? 'Firmando...' : 'Firmar con huella dactilar'}
+          </button>
+
+          <button
+            onClick={handleFirmaTemporal}
+            disabled={loading}
+            style={{
+              marginTop: 12,
+              padding: '8px 16px',
+              backgroundColor: '#ffa500',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 4,
+            }}
+          >
+            Marcar como firmado (temporal)
+          </button>
+        </>
       )}
-{contrato && !firmado && (
-  <button
-    onClick={() => {
-      setContrato({ ...contrato, estado_contrato: 'FIRMADO' });
-      setFirmado(true);
-      setAlerta('Contrato marcado como firmado (simulación).');
-      // Redirige automáticamente a la página de verificación
-      setTimeout(() => {
-        navigate(`/verificar-contrato/${contrato.id}`);
-      }, 1000);
-    }}
-    disabled={loading}
-    style={{ marginTop: 12, padding: '8px 16px', backgroundColor: '#ffa500', color: '#fff', border: 'none', borderRadius: 4 }}
-  >
-    Marcar como firmado (temporal)
-  </button>
-)}
+
       {alerta && <div style={{ marginTop: 18, color: firmado ? 'green' : 'red' }}>{alerta}</div>}
 
-      <p style={{ marginTop: 14, fontSize: 13 }}>
-        (Funcionalidad activa si configuras el backend WebAuthn correctamente)
-      </p>
-      
+      <p style={{ marginTop: 14, fontSize: 13 }}>(Funcionalidad activa si configuras el backend WebAuthn correctamente)</p>
     </div>
   );
 }

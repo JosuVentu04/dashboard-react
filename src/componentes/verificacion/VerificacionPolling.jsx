@@ -33,7 +33,7 @@ export default function VerificacionPolling({ sessionId, empleadoId }) {
             const clienteData = {
               primer_nombre: person.firstName || '',
               apellido_paterno: person.lastName || '',
-              numero_identificacion: doc.number || '123456722',
+              numero_identificacion: doc.number || '123456723',
               tipo_identificacion: doc.type ? doc.type.toLowerCase() : 'id_card',
               telefono: '',
               direccion: ''
