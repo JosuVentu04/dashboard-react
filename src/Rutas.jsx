@@ -32,6 +32,8 @@ import Planes from './componentes/HistorialCrediticio/Planes';
 import FirmarContratoCompraVenta from './componentes/contrato/FirmarContratoCompraVenta';
 import VerificarContratoCompraVenta from './componentes/contrato/VerificarContratoCompraVenta';
 import PantallaInstalacion from './paginas/Instalacion';
+import RealizarPagoPage from './componentes/Pagos/RealizarPagoPage';
+import Pagos from './componentes/Pagos/pagos';
 
 
 export default function Rutas() {
@@ -76,6 +78,8 @@ export default function Rutas() {
         <Route path="/historial-crediticio/:userId" element={<HistorialCrediticio/>}></Route>
         <Route path="/planes" element={<Planes/>} />
         <Route path='/pantalla-instalacion' element={<PantallaInstalacion/>}></Route>
+        <Route path="/realizar-pago" element={<RealizarPagoPage />} />
+        <Route path="/pagos" element={<Pagos />} />
       </Route>
       <Route path="*" element={<h1 className="text-center mt-5">404 – Esta no es la pagina que estas buscando</h1>} />
     </Routes>
