@@ -10,20 +10,23 @@ export default function CapturaPage() {
   const [mensaje, setMensaje] = useState('');
   const [subiendo, setSubiendo] = useState(false);
   const [enviado, setEnviado] = useState(false);
-  const navigate = useNavigate();
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  let stream; // ← define fuera de la función
+  let stream;
 
+  const navigate = useNavigate();
+
+  // Leer parámetros de URL
+  const params = new URLSearchParams(window.location.search);
+  const sId = params.get('sessionId');
+  const clienteExistente = params.get('clienteExistente') === 'true';
+  const clienteId = params.get('clienteId');
+
+  // -------------------------------------------
+  // INICIO CÁMARA
+  // -------------------------------------------
   useEffect(() => {
-    // Limpieza de datos previos
-    localStorage.removeItem('ContratoCreado');
-    localStorage.removeItem('DatosUsuario');
-
-    const params = new URLSearchParams(window.location.search);
-    const sId = params.get('sessionId');
-    console.log('sessionId:', sId);
     setSessionId(sId);
 
     async function iniciarCamara() {
@@ -51,10 +54,14 @@ export default function CapturaPage() {
       }
       if (stream) stream.getTracks().forEach(track => track.stop());
     };
-  }, []);
+  }, [sId]);
 
+  // -------------------------------------------
+  // TOMAR FOTO
+  // -------------------------------------------
   function tomarFoto() {
     if (!videoRef.current || !canvasRef.current) return;
+
     const video = videoRef.current;
     const canvas = canvasRef.current;
     canvas.width = video.videoWidth;
@@ -62,14 +69,24 @@ export default function CapturaPage() {
 
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imgData = canvas.toDataURL('image/jpeg');
 
+    const imgData = canvas.toDataURL('image/jpeg');
     const nuevasFotos = { ...fotos };
+
+    if (clienteExistente) {
+      nuevasFotos.cara = imgData;
+      setFotos(nuevasFotos);
+      setStep(1);
+      setMensaje('Selfie lista para enviar');
+      return;
+    }
+
     if (step === 0) nuevasFotos.cara = imgData;
     else if (step === 1) nuevasFotos.idFrontal = imgData;
     else if (step === 2) nuevasFotos.idTrasera = imgData;
 
     setFotos(nuevasFotos);
+
     if (step < 2) setStep(step + 1);
     else {
       setStep(3);
@@ -77,6 +94,9 @@ export default function CapturaPage() {
     }
   }
 
+  // -------------------------------------------
+  // SUBIR FOTO A VERIFF
+  // -------------------------------------------
   async function subirFoto(tipo, base64Image) {
     if (!sessionId) throw new Error('sessionId no definido');
 
@@ -98,6 +118,9 @@ export default function CapturaPage() {
     }
   }
 
+  // -------------------------------------------
+  // ENVIAR SESIÓN A VERIFF
+  // -------------------------------------------
   async function enviarSesion() {
     if (!sessionId) throw new Error('sessionId no definido');
 
@@ -112,63 +135,126 @@ export default function CapturaPage() {
     }
   }
 
+  // -------------------------------------------
+  // OBTENER INE DESDE BD (CLIENTE EXISTENTE)
+  // -------------------------------------------
+  async function obtenerDocumentosCliente(clienteId) {
+    const res = await fetch(`${API_URL}/users/${clienteId}/identity-documents`);
+
+    if (!res.ok) throw new Error("No se pudieron obtener los documentos del cliente");
+
+    const docs = await res.json();
+
+    const doc = docs[0];
+    if (!doc) throw new Error("El cliente no tiene documentos guardados");
+    if (!doc.front_image_base64 || !doc.back_image_base64)
+      throw new Error("Documentos del cliente incompletos");
+
+    return {
+      frontal: doc.front_image_base64,
+      trasera: doc.back_image_base64
+    };
+  }
+
+  // -------------------------------------------
+  // ENVIAR FOTOS (CLIENTE NUEVO O EXISTENTE)
+  // -------------------------------------------
   async function enviarFotos() {
     setSubiendo(true);
-    setMensaje('');
+    setMensaje("");
+
     try {
-      await subirFoto('selfie', fotos.cara);
-      await subirFoto('front', fotos.idFrontal);
-      await subirFoto('back', fotos.idTrasera);
+      // -------- CLIENTE EXISTENTE --------
+      if (clienteExistente) {
+        const docs = await obtenerDocumentosCliente(clienteId);
+
+        await subirFoto("selfie", fotos.cara);
+        await subirFoto("front", docs.frontal);
+        await subirFoto("back", docs.trasera);
+
+      } else {
+        // -------- CLIENTE NUEVO --------
+        await subirFoto("selfie", fotos.cara);
+        await subirFoto("front", fotos.idFrontal);
+        await subirFoto("back", fotos.idTrasera);
+      }
+
       await enviarSesion();
 
-      setMensaje('✅ Fotos y sesión enviadas correctamente');
       setEnviado(true);
-      setStep(0);
-      setFotos({ cara: null, idFrontal: null, idTrasera: null });
+      setMensaje("✅ Fotos y sesión enviadas correctamente");
+
+      navigate(`/resumen?clienteId=${clienteId}`);
+
     } catch (err) {
       console.error(err);
-      setMensaje('❌ ' + err.message);
+      setMensaje("❌ " + err.message);
     } finally {
       setSubiendo(false);
     }
   }
 
+  // -------------------------------------------
+  // UI
+  // -------------------------------------------
   return (
     <div style={{ maxWidth: 480, margin: 'auto', padding: 16, textAlign: 'center' }}>
       <h2>Verificación de Identidad</h2>
+
       <p>
-        {step === 0 && 'Foto 1: Selfie'}
-        {step === 1 && 'Foto 2: ID frontal'}
-        {step === 2 && 'Foto 3: ID trasera'}
-        {step > 2 && '¡Fotos listas!'}
+        {clienteExistente
+          ? "Toma una selfie para verificar identidad"
+          : step === 0
+          ? "Foto 1: Selfie"
+          : step === 1
+          ? "Foto 2: ID frontal"
+          : step === 2
+          ? "Foto 3: ID trasera"
+          : "¡Fotos listas!"}
       </p>
 
       {!enviado ? (
         <>
           <video ref={videoRef} style={{ width: '100%', borderRadius: 8 }} autoPlay muted playsInline />
+          
           <button
             onClick={tomarFoto}
-            disabled={subiendo || step > 2}
+            disabled={subiendo}
             style={{ marginTop: 12, padding: '12px 20px', fontSize: 16 }}
           >
-            {step <= 2 ? 'Tomar foto' : 'Fotos tomadas'}
+            {clienteExistente ? "Tomar selfie" : step <= 2 ? "Tomar foto" : "Fotos tomadas"}
           </button>
 
           <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-          {step > 2 && (
+          {/* Cliente nuevo: mostrar preview */}
+          {!clienteExistente && step > 2 && (
             <div style={{ marginTop: 20 }}>
               <div>
                 <img src={fotos.cara} alt="Selfie" style={{ width: 100, marginRight: 8 }} />
                 <img src={fotos.idFrontal} alt="ID frontal" style={{ width: 100, marginRight: 8 }} />
                 <img src={fotos.idTrasera} alt="ID trasera" style={{ width: 100 }} />
               </div>
+
               <button
                 onClick={enviarFotos}
                 disabled={subiendo}
                 style={{ marginTop: 16, padding: '12px 25px', fontSize: 16 }}
               >
-                {subiendo ? 'Enviando...' : 'Enviar Fotos y Sesión'}
+                {subiendo ? "Enviando..." : "Enviar Fotos y Sesión"}
+              </button>
+            </div>
+          )}
+
+          {/* Cliente existente: botón directo */}
+          {clienteExistente && step === 1 && (
+            <div style={{ marginTop: 20 }}>
+              <button
+                onClick={enviarFotos}
+                disabled={subiendo}
+                style={{ marginTop: 16, padding: '12px 25px', fontSize: 16 }}
+              >
+                {subiendo ? "Enviando..." : "Enviar Selfie"}
               </button>
             </div>
           )}
@@ -176,11 +262,10 @@ export default function CapturaPage() {
       ) : (
         <div style={{ marginTop: 40 }}>
           <h3>¡Fotos enviadas correctamente!</h3>
-          <p>Gracias por completar el proceso.</p>
         </div>
       )}
 
-      {mensaje && <p style={{ marginTop: 15, color: subiendo ? 'gray' : 'red' }}>{mensaje}</p>}
+      {mensaje && <p style={{ marginTop: 15, color: 'red' }}>{mensaje}</p>}
     </div>
   );
 }

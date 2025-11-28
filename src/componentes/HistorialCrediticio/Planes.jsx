@@ -19,7 +19,12 @@ export default function Planes() {
 
   const [pagoInicial, setPagoInicial] = useState("");
   const [error, setError] = useState("");
-  const [mensaje, setMensaje] = useState(""); // 🔹 NUEVO
+  const [mensaje, setMensaje] = useState("");
+
+  const [mostrarCuestionario, setMostrarCuestionario] = useState(false);
+  const [formaPagoInicial, setFormaPagoInicial] = useState("");
+  const [planSeleccionado, setPlanSeleccionado] = useState(null);
+  const [precioFinalSeleccionado, setPrecioFinalSeleccionado] = useState(null);
 
   const handlePagoInicialChange = (e) => {
     const value = parseFloat(e.target.value);
@@ -63,57 +68,63 @@ export default function Planes() {
   const usuario = JSON.parse(localStorage.getItem("DatosUsuario"));
   const usuarioId = usuario?.clienteFiltrado?.id;
 
-  // 🔹 NUEVA FUNCIÓN: Enviar contrato al backend
-  const crearContrato = async (planId, precioFinal) => {
-  setMensaje("Enviando datos...");
-  setError("");
+  // 🔹 Al hacer clic en cualquier plan, abre el cuestionario
+  const abrirCuestionario = (planId, precioFinal) => {
+    setPlanSeleccionado(planId);
+    setPrecioFinalSeleccionado(precioFinal);
+    setMostrarCuestionario(true);
+  };
 
-  try {
-    console.log("Usuario ID:", usuarioId);
+  // 🔹 Enviar contrato al backend incluyendo cuestionario
+  const crearContrato = async () => {
+    setMensaje("Enviando datos...");
+    setError("");
 
-    const response = await fetch("http://localhost:5000/api/contratos/compra-venta/crear", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        cliente_id: usuarioId,
-        plan_id: planId,
-        monto_total: precioFinal,
-        monto_base: precioBase,
-        pago_inicial: valorPagoInicial
-      }),
-    });
+    try {
+      const token = localStorage.getItem("token");
 
-    const data = await response.json();
+      const response = await fetch("http://localhost:5000/api/contratos/compra-venta/crear", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+        body: JSON.stringify({
+          cliente_id: usuarioId,
+          plan_id: planSeleccionado,
+          monto_total: precioFinalSeleccionado,
+          monto_base: precioBase,
+          pago_inicial: valorPagoInicial,
+          forma_pago_inicial: formaPagoInicial,
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error(data.error || "Error al crear contrato");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Error al crear contrato");
+      }
+
+      localStorage.setItem("ContratoCreado", JSON.stringify(data.contrato));
+      navigate(`/firmar-contrato/${data.contrato.id}`);
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
     }
 
-    // Guardar contrato en localStorage
-    localStorage.setItem("ContratoCreado", JSON.stringify(data.contrato));
+    setMostrarCuestionario(false);
+  };
 
-    // Redirigir a la página de firma del contrato
-    navigate(`/firmar-contrato/${data.contrato.id}`);
-
-  } catch (err) {
-    console.error(err);
-    setError(err.message);
-    setMensaje("");
-  }
-};
-
-  // 🔹 FUNCIONES para cada plan
-  const confirmarPlanTres = () => crearContrato(1, precioFinalTres);
-  const confirmarPlanSeis = () => crearContrato(4, precioFinalSeis);
-  const confirmarPlanNueve = () => crearContrato(5, precioFinalNueve);
+  const planes = [
+    { meses: 3, incremento: incrementoTres, pagoSemanal: pagoSemanalTres, precioFinal: precioFinalTres, sugerido: pagoInicialSugeridoTres, id: 1 },
+    { meses: 6, incremento: incrementoSeis, pagoSemanal: pagoSemanalSeis, precioFinal: precioFinalSeis, sugerido: pagoInicialSugeridoSeis, id: 4 },
+    { meses: 9, incremento: incrementoNueve, pagoSemanal: pagoSemanalNueve, precioFinal: precioFinalNueve, sugerido: pagoInicialSugeridoNueve, id: 5 }
+  ];
 
   return (
     <div style={{ display: "flex", marginRight: "16px" }}>
-      {[ 
-        { meses: 3, incremento: incrementoTres, pagoSemanal: pagoSemanalTres, precioFinal: precioFinalTres, sugerido: pagoInicialSugeridoTres, confirmar: confirmarPlanTres },
-        { meses: 6, incremento: incrementoSeis, pagoSemanal: pagoSemanalSeis, precioFinal: precioFinalSeis, sugerido: pagoInicialSugeridoSeis, confirmar: confirmarPlanSeis },
-        { meses: 9, incremento: incrementoNueve, pagoSemanal: pagoSemanalNueve, precioFinal: precioFinalNueve, sugerido: pagoInicialSugeridoNueve, confirmar: confirmarPlanNueve }
-      ].map((plan, idx) => (
+      {planes.map((plan, idx) => (
         <div
           key={idx}
           style={{
@@ -127,24 +138,14 @@ export default function Planes() {
           }}
         >
           <h2 style={{ textAlign: "center" }}>💳 Plan a {plan.meses} Meses</h2>
-
           <hr />
 
-          <p><strong>Modelo:</strong> 
-
-{modelo}</p>
-
-          <p><strong>Score:</strong> 
-
-{score}</p>
-
-          <p><strong>Precio base:</strong> $
-
-{precioBase.toFixed(2)}</p>
+          <p><strong>Modelo:</strong> {modelo}</p>
+          <p><strong>Score:</strong> {score}</p>
+          <p><strong>Precio base:</strong> ${precioBase.toFixed(2)}</p>
 
           <label style={{ display: "block", marginBottom: "12px" }}>
             <strong>Pago inicial (modificable):</strong>
-
             <input
               type="number"
               value={pagoInicial}
@@ -157,20 +158,16 @@ export default function Planes() {
 
           {error && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
 
-          <p><strong>Incremento aplicado:</strong> 
-
-{(plan.incremento * 100).toFixed(0)}%</p>
+          <p><strong>Incremento aplicado:</strong> {(plan.incremento * 100).toFixed(0)}%</p>
 
           <p style={{ fontWeight: "bold" }}>💰 Precio final: ${plan.precioFinal.toFixed(2)}</p>
 
           <p style={{ color: "#007bff" }}>
-  Pago semanal ({Math.round(plan.meses * 4.33)} semanas aprox): $
-
-{plan.pagoSemanal.toFixed(2)}
-</p>
+            Pago semanal ({Math.round(plan.meses * 4.33)} semanas aprox): ${plan.pagoSemanal.toFixed(2)}
+          </p>
 
           <button
-            onClick={plan.confirmar}
+            onClick={() => abrirCuestionario(plan.id, plan.precioFinal)}
             className="btn-confirmar-plan"
             disabled={!!error}
           >
@@ -182,6 +179,58 @@ export default function Planes() {
       {mensaje && (
         <div style={{ marginTop: "20px", color: "green", textAlign: "center", width: "100%" }}>
           <strong>{mensaje}</strong>
+        </div>
+      )}
+
+      {/* 🔹 MODAL CUESTIONARIO */}
+      {mostrarCuestionario && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999
+        }}>
+          <div style={{
+            background: "#fff",
+            padding: 25,
+            borderRadius: 12,
+            width: "90%",
+            maxWidth: 500
+          }}>
+            <h3>Antes de continuar</h3>
+
+            <br />
+
+            <label><strong>Forma de pago del pago inicial:</strong></label>
+            <select value={formaPagoInicial} onChange={(e) => setFormaPagoInicial(e.target.value)}>
+              <option value="">Seleccionar...</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="transferencia">Transferencia</option>
+            </select>
+
+            <br />
+
+            <button 
+              onClick={crearContrato}
+              style={{ background: "green", color: "white", padding: "10px", borderRadius: 8 }}
+            >
+              Continuar y Crear Contrato
+            </button>
+
+            <button 
+              onClick={() => setMostrarCuestionario(false)}
+              style={{ marginLeft: 10, padding: "10px", borderRadius: 8 }}
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -84,6 +84,7 @@ export default function Navbar({ onLogout }) {
                 <li><a className="dropdown-item" href="/retomar-verificacion">Retomar Verificacion</a></li>  
                 <li><a className="dropdown-item" href="#">Verificar Identidad</a></li>
                 <li><a className="dropdown-item" href="#">Historial de Consultas</a></li>
+                <li><a className="dropdown-item" href="venta-cliente">Venta a cliente</a></li>
               </ul>
             </li>
             {user && ["GERENTE", "ADMIN", "SOPORTE"].includes((user.rol || "").toUpperCase()) && (

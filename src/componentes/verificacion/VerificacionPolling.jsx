@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useDatosUsuario } from '../../context/DatosUsuarioContext';
 
 export default function VerificacionPolling({ sessionId, empleadoId }) {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [clienteId, setClienteId] = useState(null);
   const intervalRef = useRef(null);
+  const { datosUsuario } = useDatosUsuario();
   const { user, api } = useAuth();
   const navigate = useNavigate();
 
@@ -35,7 +37,7 @@ export default function VerificacionPolling({ sessionId, empleadoId }) {
               apellido_paterno: person.lastName || '',
               numero_identificacion: doc.number || '123456723',
               tipo_identificacion: doc.type ? doc.type.toLowerCase() : 'id_card',
-              telefono: '',
+              numero_telefonico: datosUsuario?.telefono || '',
               direccion: ''
             };
 

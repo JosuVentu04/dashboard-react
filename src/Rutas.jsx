@@ -34,6 +34,8 @@ import VerificarContratoCompraVenta from './componentes/contrato/VerificarContra
 import PantallaInstalacion from './paginas/Instalacion';
 import RealizarPagoPage from './componentes/Pagos/RealizarPagoPage';
 import Pagos from './componentes/Pagos/pagos';
+import VentaCliente from './componentes/Acciones/VentaCliente';
+import VentaClienteResumen from './componentes/Acciones/VentaClienteResumen';
 
 
 export default function Rutas() {
@@ -80,6 +82,8 @@ export default function Rutas() {
         <Route path='/pantalla-instalacion' element={<PantallaInstalacion/>}></Route>
         <Route path="/realizar-pago" element={<RealizarPagoPage />} />
         <Route path="/pagos" element={<Pagos />} />
+        <Route path="/venta-cliente" element={<VentaCliente/>}></Route>
+        <Route path="/venta" element={<VentaClienteResumen />} />
       </Route>
       <Route path="*" element={<h1 className="text-center mt-5">404 – Esta no es la pagina que estas buscando</h1>} />
     </Routes>

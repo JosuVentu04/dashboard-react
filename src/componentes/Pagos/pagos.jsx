@@ -20,6 +20,8 @@ export default function RealizarPagoPage() {
   const [semanasPersonalizadas, setSemanasPersonalizadas] = useState("");
   const [montoCalculado, setMontoCalculado] = useState(0);
 
+  const [metodoPago, setMetodoPago] = useState("EFECTIVO"); // <- Nuevo
+
   const [historial, setHistorial] = useState([]);
   const [mensaje, setMensaje] = useState("");
 
@@ -39,17 +41,17 @@ export default function RealizarPagoPage() {
     cargarCliente();
   }, [codigo]);
 
-  // 🔹 Cargar contrato + historial
+  // 🔹 Cargar detalles del contrato + historial
   useEffect(() => {
     if (!contratoSeleccionado) return;
 
     async function cargarContrato() {
       try {
-        // 📌 Detalles del contrato
+        // 📌 Detalles
         const res = await api.get(`/api/contratos/compra-venta/${contratoSeleccionado}`);
         setDatosContrato(res.data.contrato);
 
-        // 📌 Historial de pagos
+        // 📌 Historial
         const pagosRes = await api.get(`/pagos/historial/${contratoSeleccionado}`);
         setHistorial(pagosRes.data.historial);
 
@@ -74,6 +76,7 @@ export default function RealizarPagoPage() {
       ? parseInt(semanasPersonalizadas)
       : semanas;
 
+    // Si paga todas las semanas restantes => paga deuda total
     if (semanasSel >= semanasTotales) {
       setMontoCalculado(saldoPendiente);
     } else {
@@ -95,24 +98,23 @@ export default function RealizarPagoPage() {
         contrato_id: contratoSeleccionado,
         semanas: semanasAPagar,
         monto: montoCalculado,
-        metodo: "EFECTIVO",
+        metodo: metodoPago, // <- Aquí mandamos el método seleccionado
       });
 
-      // 📌 Actualizar historial de pagos
-      setHistorial(res.data.historial_pagos);
+      // 📌 Actualizar historial
+      setHistorial(res.data.historial_pago);
 
-      // 📌 Mensaje
       setMensaje(`Pago registrado exitosamente. Nuevo saldo: $${res.data.saldo_pendiente}`);
 
       // Reset
       setSemanas(1);
       setSemanasPersonalizadas("");
+      setMetodoPago("EFECTIVO");
 
-      // 📌 Actualizar lista de contratos
+      // Actualizar contratos
       const update = await api.get(`/users/saldo/${codigo}`);
       setContratosBasicos(update.data.saldos);
 
-      // Volver a cargar detalles
       setDatosContrato(null);
       setContratoSeleccionado(null);
 
@@ -155,10 +157,17 @@ export default function RealizarPagoPage() {
         <div className="card p-3 mb-3">
           <h5>Detalle del contrato</h5>
           <p><strong>Pago semanal:</strong> ${datosContrato.pago_semanal}</p>
-          <p><strong>Deuda Total</strong> ${datosContrato.precio_total}</p>
+          <p><strong>Deuda Total:</strong> ${datosContrato.precio_total}</p>
           <p><strong>Pagos restantes:</strong> {datosContrato.num_pagos_semanales}</p>
           <p><strong>Saldo pendiente:</strong> ${datosContrato.saldo_pendiente}</p>
           <p><strong>Saldo pagado:</strong> ${(datosContrato.precio_total - datosContrato.saldo_pendiente)}</p>
+          <p><strong>Próxima fecha de pago: </strong> 
+  {new Date(datosContrato.proximo_pago_fecha).toLocaleDateString("es-MX", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  })}
+</p>
           <p><strong>Estado:</strong> {datosContrato.estado_deuda}</p>
         </div>
       )}
@@ -180,13 +189,25 @@ export default function RealizarPagoPage() {
           <label>¿Pagar más semanas? (opcional)</label>
           <input
             type="number"
-            min="5"
+            min="1"
             max={datosContrato?.num_pagos_semanales}
             className="form-control mb-3"
             placeholder="Ej. 6, 8, 12 semanas"
             value={semanasPersonalizadas}
             onChange={(e) => setSemanasPersonalizadas(e.target.value)}
           />
+
+          {/* 🔹 Selector de método de pago */}
+          <label>Método de pago</label>
+          <select
+            className="form-control mb-3"
+            value={metodoPago}
+            onChange={(e) => setMetodoPago(e.target.value)}
+          >
+            <option value="EFECTIVO">Efectivo</option>
+            <option value="TARJETA">Tarjeta</option>
+            <option value="TRANSFERENCIA">Transferencia</option>
+          </select>
 
           <div className="alert alert-info text-center">
             <strong>Total a pagar: ${montoCalculado}</strong>
